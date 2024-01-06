@@ -91,12 +91,12 @@ int main()
                 break;
             else
                 assert(0);
-        // case 'p':
-        //     printf("\n\n\tPRINT\n\n");
-        //     rt = rbt_print(root, 0);
-        //     if (rt == 1)
-        //         printf("\tThe tree is empty\n");
-        //     break;
+        case 'p':
+            printf("\n\n\tPRINT\n\n");
+            rt = rbt_print();
+            if (rt == 1)
+                printf("\tThe tree is empty\n");
+            break;
         // case 'u':
         //     printf("\n\n\tUTILITY: checking if we have a RBT\n\n");
         //     rt = util_rbt_selfcheck(root, 0, 0);

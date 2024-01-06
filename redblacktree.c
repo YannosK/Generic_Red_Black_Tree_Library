@@ -7,44 +7,15 @@
 
 node root = NULL;
 
+/*******************************************************************************/
+// INTERNAL FUNCTIONS
+/*******************************************************************************/
+
 /*
     Left Rotation on Red-Black Tree Node
 
     returns 1 if successful
 */
-int rotate_left(node *x);
-
-/*
-    Right Rotation on Red-Black Tree Node
-
-    returns 1 if successful
-*/
-int rotate_right(node *x);
-
-/*
-    Fix for Red-Black Tree Insertion
-
-    returns the number of rotations performed during the fixup
-*/
-int insert_fixup(node *x);
-
-/*
-    Auxiliary of Red-Black Tree Delete
-
-    Node t (transplant) takes node's d (soon-to-be dead) place
-    returns 0 if executed correctly
-    returns 1 if we inserted a node with broken pointers on the parent side
-*/
-int delete_transplant(node *d, node *t);
-
-/*
-    Fix for the Red-Black Tree Delete
-
-    returns 0 if executed correctly
-    returns 1 if (*x) has broken pointers
-*/
-int delete_fixup(node *x);
-
 int rotate_left(node *x)
 {
     assert((*x) != NULL && (*x)->right != NULL);
@@ -73,6 +44,11 @@ int rotate_left(node *x)
     return 1;
 }
 
+/*
+    Right Rotation on Red-Black Tree Node
+
+    returns 1 if successful
+*/
 int rotate_right(node *x)
 {
     assert((*x) != NULL && (*x)->left != NULL);
@@ -101,51 +77,11 @@ int rotate_right(node *x)
     return 1;
 }
 
-int rbt_insert(int key)
-{
-    node aux1, aux2;
-    int rot;
+/*
+    Fix for Red-Black Tree Insertion
 
-    aux2 = NULL;
-    aux1 = root;
-    while (aux1 != NULL)
-    {
-        aux2 = aux1;
-        if (key < aux1->key)
-            aux1 = aux1->left;
-        else if (key > aux1->key)
-            aux1 = aux1->right;
-        else if (key == aux1->key)
-            return 1;
-        else
-            assert(0);
-    }
-
-    node new = (node)malloc(sizeof(struct node_struct));
-    if (new == NULL)
-        return 2;
-    new->color = 'r';
-    new->key = key;
-    new->parent = aux2;
-    new->left = NULL;
-    new->right = NULL;
-
-    if (aux2 == NULL)
-        root = new;
-    else if (key < aux2->key)
-        aux2->left = new;
-    else if (key > aux2->key)
-        aux2->right = new;
-    else
-        assert(0);
-
-    rot = insert_fixup(&new);
-    if (rot != 0)
-        printf("\t%d rotations performed during fixup\n", rot);
-
-    return 0;
-}
-
+    returns the number of rotations performed during the fixup
+*/
 int insert_fixup(node *x)
 {
     assert((*x) != NULL);
@@ -227,6 +163,309 @@ int insert_fixup(node *x)
     printf("\t\tCASE 0\n");
     root->color = 'b';
     return rr + rl;
+}
+
+/*
+    Auxiliary of Red-Black Tree Delete
+
+    Node t (transplant) takes node's d (soon-to-be dead) place
+    returns 0 if executed correctly
+    returns 1 if we inserted a node with broken pointers on the parent side
+*/
+int delete_transplant(node *d, node *t)
+{
+    assert((*d) != NULL && (*t) != NULL & (*t)->parent != NULL);
+
+    if ((*d)->parent == NULL)
+        root = (*t);
+    else
+    {
+        if ((*d) == (*d)->parent->left)
+            (*d)->parent->left = (*t);
+        else if ((*d) == (*d)->parent->right)
+            (*d)->parent->right = (*t);
+        else
+            return 1;
+    }
+
+    (*t)->parent = (*d)->parent;
+
+    return 0;
+}
+
+/*
+    Fix for the Red-Black Tree Delete
+
+    returns 0 if executed correctly
+    returns 1 if (*x) has broken pointers
+*/
+int delete_fixup(node *x)
+{
+    assert((*x) != NULL);
+
+    printf("\t\tDelete fix-up invoked\n");
+
+    node w, p, T;
+    int flag;
+
+    if ((*x)->right == (*x) && (*x)->left == (*x))
+    {
+        printf("\t\tSentinel added in delete_fixup\n");
+        flag = 1;
+        T = (*x);
+        T->right = NULL;
+        T->left = NULL;
+    }
+    else
+        flag = 0;
+
+    while ((*x)->color == 'b' && (*x) != root)
+    {
+        assert((*x) != NULL);
+        assert((*x)->parent != NULL);
+
+        if ((*x) == (*x)->parent->left)
+        {
+            w = (*x)->parent->right;
+
+            if (w != NULL)
+            {
+                if (w->color == 'r')
+                {
+                    printf("\t\t\tTYPE 1\n");
+                    w->color = 'b';
+                    (*x)->parent->color = 'r';
+                    p = (*x)->parent;
+                    rotate_left(&p);
+                    assert((*x) == (*x)->parent->left);
+                    w = (*x)->parent->right;
+                }
+
+                if (w->color == 'b')
+                {
+                    if ((w->left == NULL || w->left->color == 'b') && (w->right == NULL || w->right->color == 'b'))
+                    {
+                        printf("\t\t\tTYPE 2\n");
+                        w->color = 'r';
+                        (*x) = (*x)->parent;
+                    }
+                    else
+                    {
+                        if (w->right == NULL || w->right->color == 'b')
+                        {
+                            assert(w->left->color == 'r');
+                            printf("\t\t\tTYPE 3\n");
+                            w->left->color = 'b';
+                            w->color = 'r';
+                            rotate_right(&w);
+                            assert((*x) == (*x)->parent->left);
+                            w = (*x)->parent->right;
+                        }
+                        printf("\t\t\tTYPE 4\n");
+                        w->color = (*x)->parent->color;
+                        (*x)->parent->color = 'b';
+                        assert(w->right != NULL);
+                        w->right->color = 'b';
+                        p = (*x)->parent;
+                        rotate_left(&p);
+                        (*x) = root;
+                    }
+
+                    if (w->color != 'r' && w->color != 'b')
+                        assert(0);
+                }
+            }
+            else
+            {
+                printf("\t\t\tTYPE 0\n"); // sibling is null
+                if ((*x)->parent != root)
+                    assert(0);
+            }
+        }
+        else if ((*x) == (*x)->parent->right)
+        {
+            w = (*x)->parent->left;
+
+            if (w != NULL)
+            {
+                if (w->color == 'r')
+                {
+                    printf("\t\t\tTYPE 1\n");
+                    w->color = 'b';
+                    (*x)->parent->color = 'r';
+                    p = (*x)->parent;
+                    rotate_right(&p);
+                    assert((*x) == (*x)->parent->right);
+                    w = (*x)->parent->left;
+                }
+
+                if (w->color == 'b')
+                {
+                    if ((w->left == NULL || w->left->color == 'b') && (w->right == NULL || w->right->color == 'b'))
+                    {
+                        printf("\t\t\tTYPE 2\n");
+                        w->color = 'r';
+                        (*x) = (*x)->parent;
+                    }
+                    else
+                    {
+                        if (w->left == NULL || w->left->color == 'b')
+                        {
+                            assert(w->right->color == 'r');
+                            printf("\t\t\tTYPE 3\n");
+                            w->right->color = 'b';
+                            w->color = 'r';
+                            rotate_left(&w);
+                            assert((*x) == (*x)->parent->right);
+                            w = (*x)->parent->left;
+                        }
+                        printf("\t\t\tTYPE 4\n");
+                        w->color = (*x)->parent->color;
+                        (*x)->parent->color = 'b';
+                        assert(w->left != NULL);
+                        w->left->color = 'b';
+                        p = (*x)->parent;
+                        rotate_right(&p);
+                        (*x) = root;
+                    }
+
+                    if (w->color != 'r' && w->color != 'b')
+                        assert(0);
+                }
+            }
+            else
+            {
+                printf("\t\t\tTYPE 0\n"); // sibling is null
+                if ((*x)->parent != root)
+                    assert(0);
+            }
+        }
+        else
+            assert(0); // return 1;
+    }
+
+    if ((*x) != NULL)
+        (*x)->color = 'b';
+
+    if (flag == 1)
+    {
+        if (T->left == NULL && T->right == NULL)
+        {
+            if (T->parent == NULL)
+                assert(0);
+            else if (T == T->parent->left)
+                T->parent->left = NULL;
+            else if (T == T->parent->right)
+                T->parent->right = NULL;
+
+            free(T);
+            printf("\t\tSentinel killed by delete_fixup\n");
+            return 0;
+        }
+        else
+            assert(0);
+    }
+
+    return 0;
+}
+
+/*
+    Print function that print nodes of the same level on the same vertical
+    It begins from an inputed node and it prints downward recursively
+
+    returns 0 if executed correctly
+    returns 1 if we input a NULL node with no subtree
+*/
+int print_recursive(node x, int level)
+{
+    if (x == NULL)
+        return 1;
+    else
+    {
+        level++;
+        if (x->left != NULL)
+            print_recursive(x->left, level);
+
+        int i;
+        for (i = 0; i < level; i++)
+            printf("\t");
+        printf("Key: %d\n", x->key);
+        for (i = 0; i < level; i++)
+            printf("\t");
+        printf("Color: %c\n", x->color);
+        for (i = 0; i < level; i++)
+            printf("\t");
+        if (x->parent == NULL)
+            printf("Parent: NULL\n");
+        else
+            printf("Parent: %d\n", x->parent->key);
+        for (i = 0; i < level; i++)
+            printf("\t");
+        if (x->right == NULL)
+            printf("Right: NULL\n");
+        else
+            printf("Right: %d\n", x->right->key);
+        for (i = 0; i < level; i++)
+            printf("\t");
+        if (x->left == NULL)
+            printf("Left: NULL\n");
+        else
+            printf("Left: %d\n", x->left->key);
+
+        if (x->right != NULL)
+            print_recursive(x->right, level);
+
+        return 0;
+    }
+}
+
+/*******************************************************************************/
+// PUBLIC FUNCTIONS
+/*******************************************************************************/
+
+int rbt_insert(int key)
+{
+    node aux1, aux2;
+    int rot;
+
+    aux2 = NULL;
+    aux1 = root;
+    while (aux1 != NULL)
+    {
+        aux2 = aux1;
+        if (key < aux1->key)
+            aux1 = aux1->left;
+        else if (key > aux1->key)
+            aux1 = aux1->right;
+        else if (key == aux1->key)
+            return 1;
+        else
+            assert(0);
+    }
+
+    node new = (node)malloc(sizeof(struct node_struct));
+    if (new == NULL)
+        return 2;
+    new->color = 'r';
+    new->key = key;
+    new->parent = aux2;
+    new->left = NULL;
+    new->right = NULL;
+
+    if (aux2 == NULL)
+        root = new;
+    else if (key < aux2->key)
+        aux2->left = new;
+    else if (key > aux2->key)
+        aux2->right = new;
+    else
+        assert(0);
+
+    rot = insert_fixup(&new);
+    if (rot != 0)
+        printf("\t%d rotations performed during fixup\n", rot);
+
+    return 0;
 }
 
 int rbt_delete(int key)
@@ -408,239 +647,10 @@ int rbt_delete(int key)
         return 1;
 }
 
-int delete_transplant(node *d, node *t)
+int rbt_print(void)
 {
-    assert((*d) != NULL && (*t) != NULL & (*t)->parent != NULL);
-
-    if ((*d)->parent == NULL)
-        root = (*t);
-    else
-    {
-        if ((*d) == (*d)->parent->left)
-            (*d)->parent->left = (*t);
-        else if ((*d) == (*d)->parent->right)
-            (*d)->parent->right = (*t);
-        else
-            return 1;
-    }
-
-    (*t)->parent = (*d)->parent;
-
-    return 0;
+    return print_recursive(root, 0);
 }
-
-int delete_fixup(node *x)
-{
-    assert((*x) != NULL);
-
-    printf("\t\tDelete fix-up invoked\n");
-
-    node w, p, T;
-    int flag;
-
-    if ((*x)->right == (*x) && (*x)->left == (*x))
-    {
-        printf("\t\tSentinel added in delete_fixup\n");
-        flag = 1;
-        T = (*x);
-        T->right = NULL;
-        T->left = NULL;
-    }
-    else
-        flag = 0;
-
-    while ((*x)->color == 'b' && (*x) != root)
-    {
-        assert((*x) != NULL);
-        assert((*x)->parent != NULL);
-
-        if ((*x) == (*x)->parent->left)
-        {
-            w = (*x)->parent->right;
-
-            if (w != NULL)
-            {
-                if (w->color == 'r')
-                {
-                    printf("\t\t\tTYPE 1\n");
-                    w->color = 'b';
-                    (*x)->parent->color = 'r';
-                    p = (*x)->parent;
-                    rotate_left(&p);
-                    assert((*x) == (*x)->parent->left);
-                    w = (*x)->parent->right;
-                }
-
-                if (w->color == 'b')
-                {
-                    if ((w->left == NULL || w->left->color == 'b') && (w->right == NULL || w->right->color == 'b'))
-                    {
-                        printf("\t\t\tTYPE 2\n");
-                        w->color = 'r';
-                        (*x) = (*x)->parent;
-                    }
-                    else
-                    {
-                        if (w->right == NULL || w->right->color == 'b')
-                        {
-                            assert(w->left->color == 'r');
-                            printf("\t\t\tTYPE 3\n");
-                            w->left->color = 'b';
-                            w->color = 'r';
-                            rotate_right(&w);
-                            assert((*x) == (*x)->parent->left);
-                            w = (*x)->parent->right;
-                        }
-                        printf("\t\t\tTYPE 4\n");
-                        w->color = (*x)->parent->color;
-                        (*x)->parent->color = 'b';
-                        assert(w->right != NULL);
-                        w->right->color = 'b';
-                        p = (*x)->parent;
-                        rotate_left(&p);
-                        (*x) = root;
-                    }
-
-                    if (w->color != 'r' && w->color != 'b')
-                        assert(0);
-                }
-            }
-            else
-            {
-                printf("\t\t\tTYPE 0\n"); // sibling is null
-                if ((*x)->parent != root)
-                    assert(0);
-            }
-        }
-        else if ((*x) == (*x)->parent->right)
-        {
-            w = (*x)->parent->left;
-
-            if (w != NULL)
-            {
-                if (w->color == 'r')
-                {
-                    printf("\t\t\tTYPE 1\n");
-                    w->color = 'b';
-                    (*x)->parent->color = 'r';
-                    p = (*x)->parent;
-                    rotate_right(&p);
-                    assert((*x) == (*x)->parent->right);
-                    w = (*x)->parent->left;
-                }
-
-                if (w->color == 'b')
-                {
-                    if ((w->left == NULL || w->left->color == 'b') && (w->right == NULL || w->right->color == 'b'))
-                    {
-                        printf("\t\t\tTYPE 2\n");
-                        w->color = 'r';
-                        (*x) = (*x)->parent;
-                    }
-                    else
-                    {
-                        if (w->left == NULL || w->left->color == 'b')
-                        {
-                            assert(w->right->color == 'r');
-                            printf("\t\t\tTYPE 3\n");
-                            w->right->color = 'b';
-                            w->color = 'r';
-                            rotate_left(&w);
-                            assert((*x) == (*x)->parent->right);
-                            w = (*x)->parent->left;
-                        }
-                        printf("\t\t\tTYPE 4\n");
-                        w->color = (*x)->parent->color;
-                        (*x)->parent->color = 'b';
-                        assert(w->left != NULL);
-                        w->left->color = 'b';
-                        p = (*x)->parent;
-                        rotate_right(&p);
-                        (*x) = root;
-                    }
-
-                    if (w->color != 'r' && w->color != 'b')
-                        assert(0);
-                }
-            }
-            else
-            {
-                printf("\t\t\tTYPE 0\n"); // sibling is null
-                if ((*x)->parent != root)
-                    assert(0);
-            }
-        }
-        else
-            assert(0); // return 1;
-    }
-
-    if ((*x) != NULL)
-        (*x)->color = 'b';
-
-    if (flag == 1)
-    {
-        if (T->left == NULL && T->right == NULL)
-        {
-            if (T->parent == NULL)
-                assert(0);
-            else if (T == T->parent->left)
-                T->parent->left = NULL;
-            else if (T == T->parent->right)
-                T->parent->right = NULL;
-
-            free(T);
-            printf("\t\tSentinel killed by delete_fixup\n");
-            return 0;
-        }
-        else
-            assert(0);
-    }
-
-    return 0;
-}
-
-// int rbt_print(node x, int level)
-// {
-//     if (x == NULL)
-//         return 1;
-//     else
-//     {
-//         level++;
-//         if (x->left != NULL)
-//             rbt_print(x->left, level);
-
-//         int i;
-//         for (i = 0; i < level; i++)
-//             printf("\t");
-//         printf("Key: %d\n", x->key);
-//         for (i = 0; i < level; i++)
-//             printf("\t");
-//         printf("Color: %c\n", x->color);
-//         for (i = 0; i < level; i++)
-//             printf("\t");
-//         if (x->parent == NULL)
-//             printf("Parent: NULL\n");
-//         else
-//             printf("Parent: %d\n", x->parent->key);
-//         for (i = 0; i < level; i++)
-//             printf("\t");
-//         if (x->right == NULL)
-//             printf("Right: NULL\n");
-//         else
-//             printf("Right: %d\n", x->right->key);
-//         for (i = 0; i < level; i++)
-//             printf("\t");
-//         if (x->left == NULL)
-//             printf("Left: NULL\n");
-//         else
-//             printf("Left: %d\n", x->left->key);
-
-//         if (x->right != NULL)
-//             rbt_print(x->right, level);
-
-//         return 0;
-//     }
-// }
 
 // int util_rbt_selfcheck(node r, int blacks, int nill_blacks)
 // {

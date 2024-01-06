@@ -31,13 +31,13 @@ int rbt_insert(int key);
 */
 int rbt_delete(int key);
 
-// /*
-//     Red-Black Tree Recursive Print
+/*
+    Prints the entire Red-Black Tree
 
-//     returns 0 if executed correctly
-//     returns 1 if we add a null node with no subtree
-// */
-// int rbt_print(node x, int level);
+    returns 0 if executed correctly
+    returns 1 if the tree is empty
+*/
+int rbt_print(void);
 
 // /*
 //     Checks if the subtree rooted in the inserted node is a RBT
