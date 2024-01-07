@@ -373,7 +373,7 @@ int delete_fixup(node *x)
     Print function that print nodes of the same level on the same vertical
     It begins from an inputed node and it prints downward recursively
 
-    returns 0 if executed correctly
+    returns 0 if executed correctlywatchdog_rbt_selfcheck
     returns 1 if we input a NULL node with no subtree
 */
 int print_recursive(node x, int level)
@@ -415,6 +415,196 @@ int print_recursive(node x, int level)
         if (x->right != NULL)
             print_recursive(x->right, level);
 
+        return 0;
+    }
+}
+
+/*
+    Checks if the subtree rooted in the inserted node is a RBT
+
+    returns the (positive) number of black nodes if it is a RBT
+    returns -1 if a node is neither red nor black
+    returns -2 if the root is not black or if it hasn't got a NULL parent
+    returns -3 if a red node does not have NULL or black children
+    returns -4 if a path to NULL has more or less black nodes than the other paths
+    returns -5 if the tree is empty
+*/
+int watchdog_rbt_selfcheck(node r, int blacks, int nill_blacks)
+{
+    assert(blacks >= 0 && nill_blacks >= 0);
+
+    int rt;
+
+    if (r == root || root == NULL)
+    {
+        if (root == NULL)
+            return -5;
+        else
+        {
+            if (root->color != 'r' && root->color != 'b')
+                return -1;
+            else if (root->color == 'r' || root->parent != NULL)
+                return -2;
+        }
+    }
+    else
+    {
+        assert(r != NULL);
+
+        if (r->color != 'r' && r->color != 'b')
+            return -1;
+        if (r->color == 'r')
+        {
+            if (!(((r->left == NULL) || (r->left->color == 'b')) && ((r->right == NULL) || (r->right->color == 'b'))))
+                return -3;
+        }
+        else if (r->color == 'b')
+            blacks++;
+    }
+
+    if (r->left == NULL && r->right == NULL)
+    {
+        if (nill_blacks != 0 && nill_blacks != blacks)
+            return -4;
+        else
+        {
+            nill_blacks = blacks;
+            return nill_blacks;
+        }
+    }
+    else
+    {
+        assert(r->left != NULL || r->right != NULL);
+
+        if (r->left != NULL)
+        {
+            rt = watchdog_rbt_selfcheck(r->left, blacks, nill_blacks);
+
+            if (rt < 0)
+            {
+                switch (rt)
+                {
+                case -1:
+                    return -1;
+                    break;
+                case -2:
+                    assert(0);
+                    break;
+                case -3:
+                    return -3;
+                    break;
+                case -4:
+                    return -4;
+                case -5:
+                    assert(0);
+                    break;
+                default:
+                    assert(0);
+                    break;
+                }
+            }
+            else
+                nill_blacks = rt;
+        }
+
+        if (r->right != NULL)
+        {
+            rt = watchdog_rbt_selfcheck(r->right, blacks, nill_blacks);
+
+            if (rt < 0)
+            {
+                switch (rt)
+                {
+                case -1:
+                    return -1;
+                    break;
+                case -2:
+                    assert(0);
+                    break;
+                case -3:
+                    return -3;
+                    break;
+                case -4:
+                    return -4;
+                case -5:
+                    assert(0);
+                    break;
+                default:
+                    assert(0);
+                    break;
+                }
+            }
+            else
+                nill_blacks = rt;
+        }
+
+        return nill_blacks;
+    }
+}
+
+/*
+    Uses watchdog and creates error logs in a text file
+
+    returns 0 if the structure is a RBT
+*/
+int watchdog_file_logger(void)
+{
+    int rt;
+    int x = 5;
+    int number;
+    int log_num = 0;
+
+    // printf("\n\n\tUTILITY: checking if we have a RBT\n\n");
+
+    rt = watchdog_rbt_selfcheck(root, 0, 0);
+
+    if (rt < 0)
+    {
+        FILE *fp;
+        fp = fopen("ErrorLogs.txt", "r+");
+
+        fseek(fp, 0, SEEK_SET);
+        while (fscanf(fp, "%d", &log_num) == 1)
+        {
+        }
+        fseek(fp, 0, SEEK_END);
+        log_num++;
+
+        fprintf(fp, "\n\nError log: %d\n\n", log_num);
+
+        fprintf(fp, "\tThe structure is not a RBT\n");
+        switch (rt)
+        {
+        case -1:
+            fprintf(fp, "\tThere are nodes that have a wrong color (neither red nor black)\n");
+            break;
+        case -2:
+            fprintf(fp, "\tThe root is not black or it has a parent other than NULL\n");
+            break;
+        case -3:
+            fprintf(fp, "\tA red node has black children\n");
+            break;
+        case -4:
+            fprintf(fp, "\tNot all paths to NULL nodes have the same number of black nodes\n");
+            break;
+        case -5:
+            fprintf(fp, "\tThe tree is empty\n");
+            break;
+        }
+
+        fprintf(fp, "\n\nEnd of error log: %d\n\n**************************************************************************", log_num);
+        fseek(fp, 0, SEEK_SET);
+        fprintf(fp, "%d", log_num);
+        fseek(fp, 0, SEEK_SET);
+        fclose(fp);
+
+        perror("The data strucure is broken");
+        exit(666);
+    }
+    else
+    {
+        assert(rt >= 0 && root != NULL);
+        // printf("\tThe structure is a RBT with root %d and %d black nodes from root to NULL nodes.", root->key, rt);
         return 0;
     }
 }
@@ -651,116 +841,3 @@ int rbt_print(void)
 {
     return print_recursive(root, 0);
 }
-
-// int util_rbt_selfcheck(node r, int blacks, int nill_blacks)
-// {
-//     assert(blacks >= 0 && nill_blacks >= 0);
-
-//     int rt;
-
-//     if (r == root || root == NULL)
-//     {
-//         if (root == NULL)
-//             return -5;
-//         else
-//         {
-//             if (root->color != 'r' && root->color != 'b')
-//                 return -1;
-//             else if (root->color == 'r' || root->parent != NULL)
-//                 return -2;
-//         }
-//     }
-//     else
-//     {
-//         assert(r != NULL);
-
-//         if (r->color != 'r' && r->color != 'b')
-//             return -1;
-//         if (r->color == 'r')
-//         {
-//             if (!(((r->left == NULL) || (r->left->color == 'b')) && ((r->right == NULL) || (r->right->color == 'b'))))
-//                 return -3;
-//         }
-//         else if (r->color == 'b')
-//             blacks++;
-//     }
-
-//     if (r->left == NULL && r->right == NULL)
-//     {
-//         if (nill_blacks != 0 && nill_blacks != blacks)
-//             return -4;
-//         else
-//         {
-//             nill_blacks = blacks;
-//             return nill_blacks;
-//         }
-//     }
-//     else
-//     {
-//         assert(r->left != NULL || r->right != NULL);
-
-//         if (r->left != NULL)
-//         {
-//             rt = util_rbt_selfcheck(r->left, blacks, nill_blacks);
-
-//             if (rt < 0)
-//             {
-//                 switch (rt)
-//                 {
-//                 case -1:
-//                     return -1;
-//                     break;
-//                 case -2:
-//                     assert(0);
-//                     break;
-//                 case -3:
-//                     return -3;
-//                     break;
-//                 case -4:
-//                     return -4;
-//                 case -5:
-//                     assert(0);
-//                     break;
-//                 default:
-//                     assert(0);
-//                     break;
-//                 }
-//             }
-//             else
-//                 nill_blacks = rt;
-//         }
-
-//         if (r->right != NULL)
-//         {
-//             rt = util_rbt_selfcheck(r->right, blacks, nill_blacks);
-
-//             if (rt < 0)
-//             {
-//                 switch (rt)
-//                 {
-//                 case -1:
-//                     return -1;
-//                     break;
-//                 case -2:
-//                     assert(0);
-//                     break;
-//                 case -3:
-//                     return -3;
-//                     break;
-//                 case -4:
-//                     return -4;
-//                 case -5:
-//                     assert(0);
-//                     break;
-//                 default:
-//                     assert(0);
-//                     break;
-//                 }
-//             }
-//             else
-//                 nill_blacks = rt;
-//         }
-
-//         return nill_blacks;
-//     }
-// }
