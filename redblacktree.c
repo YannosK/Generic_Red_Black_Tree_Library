@@ -94,8 +94,8 @@ int insert_fixup(node *x)
 
     while ((*x)->parent != NULL && (*x)->parent->color == 'r')
     {
-        assert((*x)->parent->parent != NULL);       // if the parent is red then grandparent definately exists
-        assert((*x)->parent->parent->color == 'b'); // grandparent should also be black in any case
+        assert((*x)->parent->parent != NULL);       
+        assert((*x)->parent->parent->color == 'b'); 
 
         cnt++;
         printf("\tFixup Loop Call: %d\n", cnt);
