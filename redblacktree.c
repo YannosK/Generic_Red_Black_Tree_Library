@@ -613,6 +613,15 @@ int watchdog_file_logger(void)
 // PUBLIC FUNCTIONS
 /*******************************************************************************/
 
+handler rbt_create(void)
+{
+    handler tree = (handler)malloc(sizeof(struct sentinel));
+    if (tree == NULL)
+        return NULL;
+    tree->root = NULL;
+    return tree;
+}
+
 int rbt_insert(int key)
 {
     node aux1, aux2;

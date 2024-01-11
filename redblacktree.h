@@ -11,6 +11,12 @@ struct node_struct
     node parent;
 };
 
+typedef struct sentinel *handler;
+struct sentinel
+{
+    node root;
+};
+
 /*
     Red-Black Tree Node Insertion
 
@@ -41,7 +47,10 @@ int rbt_print(void);
 
 /*
     Creates a new red black tree and returns a handle to the main node of it
+    
+    returns a pointer to the struct of the sentinel node of the red black tree
+    returns NULL if memory allocation failed
 */
-node rbt_create(void);
+handler rbt_create(void);
 
 #endif

@@ -4,6 +4,7 @@
 // #define NDEBUG
 #include <assert.h>
 
+
 int main()
 {
     char usr_char;
