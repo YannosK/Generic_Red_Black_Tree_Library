@@ -39,4 +39,9 @@ int rbt_delete(int key);
 */
 int rbt_print(void);
 
+/*
+    Creates a new red black tree and returns a handle to the main node of it
+*/
+node rbt_create(void);
+
 #endif
