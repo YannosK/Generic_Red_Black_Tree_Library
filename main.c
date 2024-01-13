@@ -4,6 +4,14 @@
 // #define NDEBUG
 #include <assert.h>
 
+/*
+    This main function is a scafold to test the red-black tree library
+    It implements a terminal menu for a user to use the library functions
+
+    returns 0 when the user selects to quit
+    returns 1 is scanf reads wrong user input
+    returns 2 if dynamic memory allocation in the heap fails
+*/
 int main()
 {
     char usr_char;
@@ -14,7 +22,7 @@ int main()
     if (rbt_init() == NULL)
     {
         printf("\nFATAL MEMORY ERROR");
-        return 1;
+        return 2;
     }
     else
     {
@@ -45,7 +53,14 @@ int main()
                 break;
             case 'a':
                 printf("\n\n\tCREATE NEW RED-BLACK TREE\n\n");
-                tree = rbt_create();
+                rt = rbt_create();
+                if (rt == 0)
+                {
+                    printf("\tFATAL ERROR: You have no memory (heap allocation failed) and the program will terminate\n");
+                    return 2;
+                }
+                else
+                    printf("\tRed-black tree created with ID No: %d\n", rt);
                 break;
             case 'i':
                 printf("\n\n\tINSERT\n\n");
@@ -59,7 +74,7 @@ int main()
                 if (rt == 2)
                 {
                     printf("\tFATAL ERROR: You have no memory (heap allocation failed) and the program will terminate\n");
-                    return 0;
+                    return 2;
                 }
                 else if (rt == 1)
                 {
@@ -82,7 +97,7 @@ int main()
                 if (rt == 3)
                 {
                     printf("\tFATAL ERROR: Esoteric mistake. Shoot the programmer. This program is dead\n");
-                    return 0;
+                    return 1;
                 }
                 else if (rt == 4)
                 {
@@ -92,7 +107,7 @@ int main()
                 else if (rt == 2)
                 {
                     printf("\tFATAL ERROR: You have no memory (heap allocation failed) and the program will terminate\n");
-                    return 0;
+                    return 2;
                 }
                 else if (rt == 1)
                 {

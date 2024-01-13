@@ -9,11 +9,12 @@ typedef struct tree_list *list;
 struct tree_list
 {
     unsigned int No;
-    list h;
-    list t;
+    handler tree;
+    list n;
+    list b;
 };
 
-list global_instance = NULL;
+list rbt_list_tail = NULL;
 
 /****************************************************************************************************************************************************************/
 /****************************************************************************************************************************************************************/
@@ -627,28 +628,41 @@ int watchdog_file_logger(handler tree)
 
 void *rbt_init(void)
 {
-    assert(global_instance == NULL);
+    assert(rbt_list_tail == NULL);
 
     list instance = (list)malloc(sizeof(struct tree_list));
     if (instance == NULL)
         return NULL;
 
-    instance->h = instance;
-    instance->t = instance;
+    instance->n = NULL;
+    instance->b = NULL;
+    instance->tree = NULL;
     instance->No = 0;
 
-    global_instance = instance;
+    rbt_list_tail = instance;
 
-    return global_instance;
+    return rbt_list_tail;
 }
 
-handler rbt_create(void)
+unsigned int rbt_create(void)
 {
+    assert(rbt_list_tail != NULL);
+
     handler tree = (handler)malloc(sizeof(struct sentinel));
     if (tree == NULL)
-        return NULL;
+        return 0;
     tree->root = NULL;
-    return tree;
+
+    list instance = (list)malloc(sizeof(struct tree_list));
+    if (instance == NULL)
+        return 0;
+
+    instance->n = NULL;
+    instance->b = rbt_list_tail;
+    instance->tree = tree;
+    instance->No = ++rbt_list_tail->No;
+
+    return instance->No;
 }
 
 int rbt_insert(handler *tree, int key)
