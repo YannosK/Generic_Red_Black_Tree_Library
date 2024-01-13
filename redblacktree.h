@@ -56,6 +56,13 @@ int rbt_insert(handler *tree, int key);
 int rbt_delete(handler *tree, int key);
 
 /*
+    Returns an array of integers with the IDs of all the created trees
+
+    returns NULL it means no tree was ever created
+*/
+int *rbt_show(void);
+
+/*
     Prints the entire Red-Black Tree
 
     returns 0 if executed correctly

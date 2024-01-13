@@ -9,11 +9,13 @@ typedef struct tree_list *list;
 struct tree_list
 {
     unsigned int No;
+    unsigned int multitude;
     handler tree;
     list n;
     list b;
 };
 
+list rbt_list_head = NULL;
 list rbt_list_tail = NULL;
 
 /****************************************************************************************************************************************************************/
@@ -628,7 +630,7 @@ int watchdog_file_logger(handler tree)
 
 void *rbt_init(void)
 {
-    assert(rbt_list_tail == NULL);
+    assert(rbt_list_tail == NULL && rbt_list_head == NULL);
 
     list instance = (list)malloc(sizeof(struct tree_list));
     if (instance == NULL)
@@ -636,17 +638,21 @@ void *rbt_init(void)
 
     instance->n = NULL;
     instance->b = NULL;
+    instance->multitude = 0;
     instance->tree = NULL;
     instance->No = 0;
 
     rbt_list_tail = instance;
+    rbt_list_head = rbt_list_tail;
+
+    assert(rbt_list_tail != NULL && rbt_list_head != NULL);
 
     return rbt_list_tail;
 }
 
 unsigned int rbt_create(void)
 {
-    assert(rbt_list_tail != NULL);
+    assert(rbt_list_tail != NULL && rbt_list_head != NULL);
 
     handler tree = (handler)malloc(sizeof(struct sentinel));
     if (tree == NULL)
@@ -657,12 +663,101 @@ unsigned int rbt_create(void)
     if (instance == NULL)
         return 0;
 
+    list aux = rbt_list_head;
+
+    if (aux->n == NULL)
+    {
+        instance->n = NULL;
+        instance->b = rbt_list_head;
+        rbt_list_head->n = instance;
+
+        instance->multitude = 1;
+        instance->tree = tree;
+        instance->No = 1;
+
+        rbt_list_tail = instance;
+        rbt_list_head->multitude = rbt_list_tail->multitude;
+
+        return instance->No;
+    }
+    else
+    {
+        if (aux->n->No != 1)
+        {
+            instance->n = rbt_list_head->n;
+            rbt_list_head->n->b = instance;
+            instance->b = rbt_list_head;
+            rbt_list_head->n = instance;
+
+            instance->multitude = ++rbt_list_tail->multitude;
+            instance->tree = tree;
+            instance->No = 1;
+
+            assert(instance->multitude - rbt_list_tail->multitude == 1);
+
+            rbt_list_tail->multitude = instance->multitude;
+            rbt_list_head->multitude = rbt_list_tail->multitude;
+
+            return instance->No;
+        }
+        else
+        {
+            aux = aux->n;
+            while (aux->n != NULL)
+            {
+                if ((aux->n->No - aux->No) > 1)
+                    break;
+                else
+                    aux = aux->n;
+            }
+
+            if (aux->n == NULL)
+            {
+                instance->n = NULL;
+                instance->b = aux;
+                aux->n = instance;
+
+                instance->multitude = ++rbt_list_tail->multitude;
+                instance->tree = tree;
+                instance->No = ++aux->No;
+
+                assert(instance->multitude - rbt_list_tail->multitude == 1);
+
+                rbt_list_tail = instance;
+                rbt_list_head->multitude = rbt_list_tail->multitude;
+
+                return instance->No;
+            }
+            else
+            {
+                instance->n = aux->n;
+                aux->n->b = instance;
+                instance->b = aux;
+                aux->n = instance;
+
+                instance->multitude = ++rbt_list_tail->multitude;
+                instance->tree = tree;
+                instance->No = ++aux->No;
+
+                assert(instance->multitude - rbt_list_tail->multitude == 1);
+
+                rbt_list_tail->multitude = instance->multitude;
+                rbt_list_head->multitude = rbt_list_tail->multitude;
+
+                return instance->No;
+            }
+        }
+    }
+
     instance->n = NULL;
     instance->b = rbt_list_tail;
+    instance->multitude = ++rbt_list_tail->multitude;
     instance->tree = tree;
     instance->No = ++rbt_list_tail->No;
 
-    return instance->No;
+    rbt_list_tail = instance;
+
+    return rbt_list_tail->No;
 }
 
 int rbt_insert(handler *tree, int key)
@@ -887,6 +982,41 @@ int rbt_delete(handler *tree, int key)
     }
     else
         return 1;
+}
+
+int *rbt_show(void)
+{
+    if (rbt_list_tail == NULL)
+        return NULL;
+    else
+    {
+        if (rbt_list_tail->No == 0)
+            return NULL;
+        else
+        {
+            assert(rbt_list_tail->multitude != 0);
+
+            int *arr = (int *)malloc((rbt_list_tail->multitude) * (sizeof(unsigned int)));
+
+            assert(rbt_list_head != NULL);
+
+            list aux = rbt_list_head;
+
+            assert(aux->n != NULL);
+
+            int i = 0;
+            while (aux->n != NULL)
+            {
+                aux = aux->n;
+                *(arr + i) = aux->No;
+                i++;
+            }
+
+            assert(i + 1 == rbt_list_tail->multitude);
+
+            return arr;
+        }
+    }
 }
 
 int rbt_print(handler tree)

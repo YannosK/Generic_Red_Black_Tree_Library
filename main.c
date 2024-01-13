@@ -97,7 +97,7 @@ int main()
                 if (rt == 3)
                 {
                     printf("\tFATAL ERROR: Esoteric mistake. Shoot the programmer. This program is dead\n");
-                    return 1;
+                    return 3;
                 }
                 else if (rt == 4)
                 {
