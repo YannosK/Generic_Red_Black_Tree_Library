@@ -18,6 +18,16 @@ struct sentinel
 };
 
 /*
+    Initialize function of the library
+    It is vital in order to have many instances of red-black trees
+
+    returns a void pointer that is actually a pointer to the tail of a list of integers
+
+    WARNING: It must only be called one time by the function that wants to use the library
+*/
+void *rbt_init(void);
+
+/*
     Creates a new red black tree and returns a handle to the main node of it
 
     returns a pointer to the struct of the sentinel node of the red black tree

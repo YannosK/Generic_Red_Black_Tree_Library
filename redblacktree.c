@@ -5,7 +5,15 @@
 // #define NDEBUG
 #include <assert.h>
 
-// node root = NULL;
+typedef struct tree_list *list;
+struct tree_list
+{
+    unsigned int No;
+    list h;
+    list t;
+};
+
+list global_instance = NULL;
 
 /****************************************************************************************************************************************************************/
 /****************************************************************************************************************************************************************/
@@ -616,6 +624,23 @@ int watchdog_file_logger(handler tree)
 // PUBLIC FUNCTIONS
 /****************************************************************************************************************************************************************/
 /****************************************************************************************************************************************************************/
+
+void *rbt_init(void)
+{
+    assert(global_instance == NULL);
+
+    list instance = (list)malloc(sizeof(struct tree_list));
+    if (instance == NULL)
+        return NULL;
+
+    instance->h = instance;
+    instance->t = instance;
+    instance->No = 0;
+
+    global_instance = instance;
+
+    return global_instance;
+}
 
 handler rbt_create(void)
 {
