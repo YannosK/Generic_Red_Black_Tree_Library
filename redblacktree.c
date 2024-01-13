@@ -689,7 +689,7 @@ unsigned int rbt_create(void)
             instance->b = rbt_list_head;
             rbt_list_head->n = instance;
 
-            instance->multitude = ++rbt_list_tail->multitude;
+            instance->multitude = rbt_list_tail->multitude + 1;
             instance->tree = tree;
             instance->No = 1;
 
@@ -717,11 +717,11 @@ unsigned int rbt_create(void)
                 instance->b = aux;
                 aux->n = instance;
 
-                instance->multitude = ++rbt_list_tail->multitude;
+                instance->multitude = rbt_list_tail->multitude + 1;
                 instance->tree = tree;
-                instance->No = ++aux->No;
+                instance->No = aux->No + 1;
 
-                assert(instance->multitude - rbt_list_tail->multitude == 1);
+                assert(instance->multitude == rbt_list_tail->multitude + 1);
 
                 rbt_list_tail = instance;
                 rbt_list_head->multitude = rbt_list_tail->multitude;
@@ -735,9 +735,9 @@ unsigned int rbt_create(void)
                 instance->b = aux;
                 aux->n = instance;
 
-                instance->multitude = ++rbt_list_tail->multitude;
+                instance->multitude = rbt_list_tail->multitude + 1;
                 instance->tree = tree;
-                instance->No = ++aux->No;
+                instance->No = aux->No + 1;
 
                 assert(instance->multitude - rbt_list_tail->multitude == 1);
 
@@ -751,9 +751,9 @@ unsigned int rbt_create(void)
 
     instance->n = NULL;
     instance->b = rbt_list_tail;
-    instance->multitude = ++rbt_list_tail->multitude;
+    instance->multitude = rbt_list_tail->multitude + 1;
     instance->tree = tree;
-    instance->No = ++rbt_list_tail->No;
+    instance->No = rbt_list_tail->No + 1;
 
     rbt_list_tail = instance;
 
@@ -996,7 +996,7 @@ int *rbt_show(void)
         {
             assert(rbt_list_tail->multitude != 0);
 
-            int *arr = (int *)malloc((rbt_list_tail->multitude) * (sizeof(unsigned int)));
+            int *arr = (int *)malloc((rbt_list_tail->multitude + 1) * (sizeof(unsigned int)));
 
             assert(rbt_list_head != NULL);
 
@@ -1012,7 +1012,9 @@ int *rbt_show(void)
                 i++;
             }
 
-            assert(i + 1 == rbt_list_tail->multitude);
+            *(arr + i + 1) = 0;
+
+            assert(i == rbt_list_tail->multitude);
 
             return arr;
         }

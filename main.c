@@ -17,6 +17,7 @@ int main()
     char usr_char;
     usr_char = 'a';
     int usr_int, rt;
+    int *int_handle;
     handler tree;
 
     if (rbt_init() == NULL)
@@ -32,7 +33,7 @@ int main()
             printf("\n\n*******************************************************************************\n");
             printf("Previous choice %c\n", usr_char);
             printf("Select what would you like to do:\n");
-            printf("q : quit\na: create a new red black tree\ni : insert new node using its key\nd : delete a node using its key\np : print the Red-Black Tree\nu : Use utility function\n");
+            printf("q: quit\na: create a new red black tree\ns: show all red-black trees with their IDs\ni: insert new node\nd: delete a node\np: print the red-black Tree\n");
             printf("Your choice: ");
             scanf("%c", &usr_char);
             getchar();
@@ -61,6 +62,16 @@ int main()
                 }
                 else
                     printf("\tRed-black tree created with ID No: %d\n", rt);
+                break;
+            case 's':
+                printf("\n\n\tSHOW RED-BLAVK TREE INSTANCES\n\n");
+                int_handle = rbt_show();
+                if (int_handle == NULL)
+                    printf("\tNo red-black trees where ever created\n");
+                else
+                {
+                    printf("\tThere are %lu red-black trees\n", (sizeof(*int_handle)) >> 2);
+                }
                 break;
             case 'i':
                 printf("\n\n\tINSERT\n\n");

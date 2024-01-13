@@ -58,7 +58,8 @@ int rbt_delete(handler *tree, int key);
 /*
     Returns an array of integers with the IDs of all the created trees
 
-    returns NULL it means no tree was ever created
+    returns NULL when no tree was ever created
+    returns a pointer to a heap allocated array of integers that are the IDs of the trees. Last one will always be zero and not have to do with the tree
 */
 int *rbt_show(void);
 
