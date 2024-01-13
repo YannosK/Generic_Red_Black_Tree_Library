@@ -7,16 +7,18 @@
 
 // node root = NULL;
 
-/*******************************************************************************/
+/****************************************************************************************************************************************************************/
+/****************************************************************************************************************************************************************/
 // INTERNAL FUNCTIONS
-/*******************************************************************************/
+/****************************************************************************************************************************************************************/
+/****************************************************************************************************************************************************************/
 
 /*
     Left Rotation on Red-Black Tree Node
 
     returns 1 if successful
 */
-int rotate_left(handler* tree, node *x)
+int rotate_left(handler *tree, node *x)
 {
     assert((*x) != NULL && (*x)->right != NULL);
 
@@ -49,7 +51,7 @@ int rotate_left(handler* tree, node *x)
 
     returns 1 if successful
 */
-int rotate_right(handler* tree, node *x)
+int rotate_right(handler *tree, node *x)
 {
     assert((*x) != NULL && (*x)->left != NULL);
 
@@ -94,8 +96,8 @@ int insert_fixup(handler *tree, node *x)
 
     while ((*x)->parent != NULL && (*x)->parent->color == 'r')
     {
-        assert((*x)->parent->parent != NULL);       
-        assert((*x)->parent->parent->color == 'b'); 
+        assert((*x)->parent->parent != NULL);
+        assert((*x)->parent->parent->color == 'b');
 
         cnt++;
         printf("\tFixup Loop Call: %d\n", cnt);
@@ -172,7 +174,7 @@ int insert_fixup(handler *tree, node *x)
     returns 0 if executed correctly
     returns 1 if we inserted a node with broken pointers on the parent side
 */
-int delete_transplant(handler* tree, node *d, node *t)
+int delete_transplant(handler *tree, node *d, node *t)
 {
     assert((*d) != NULL && (*t) != NULL & (*t)->parent != NULL);
 
@@ -199,7 +201,7 @@ int delete_transplant(handler* tree, node *d, node *t)
     returns 0 if executed correctly
     returns 1 if (*x) has broken pointers
 */
-int delete_fixup(handler* tree, node *x)
+int delete_fixup(handler *tree, node *x)
 {
     assert((*x) != NULL);
 
@@ -609,9 +611,11 @@ int watchdog_file_logger(handler tree)
     }
 }
 
-/*******************************************************************************/
+/****************************************************************************************************************************************************************/
+/****************************************************************************************************************************************************************/
 // PUBLIC FUNCTIONS
-/*******************************************************************************/
+/****************************************************************************************************************************************************************/
+/****************************************************************************************************************************************************************/
 
 handler rbt_create(void)
 {
@@ -667,7 +671,7 @@ int rbt_insert(handler *tree, int key)
     return 0;
 }
 
-int rbt_delete(handler* tree, int key)
+int rbt_delete(handler *tree, int key)
 {
     if ((*tree)->root == NULL)
         return 4;

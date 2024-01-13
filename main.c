@@ -4,12 +4,12 @@
 // #define NDEBUG
 #include <assert.h>
 
-
 int main()
 {
     char usr_char;
     usr_char = 'a';
     int usr_int, rt;
+    handler tree;
 
     while (usr_char != 'q')
     {
@@ -17,7 +17,7 @@ int main()
         printf("\n\n*******************************************************************************\n");
         printf("Previous choice %c\n", usr_char);
         printf("Select what would you like to do:\n");
-        printf("q : quit\ni : insert new node using its key\nd : delete a node using its key\np : print the Red-Black Tree\nu : Use utility function\n");
+        printf("q : quit\na: create a new red black tree\ni : insert new node using its key\nd : delete a node using its key\np : print the Red-Black Tree\nu : Use utility function\n");
         printf("Your choice: ");
         scanf("%c", &usr_char);
         getchar();
@@ -36,6 +36,10 @@ int main()
         case 'q':
             printf("\n\n\tQUIT\n\n");
             break;
+        case 'a':
+            printf("\n\n\tCREATE NEW RED-BLACK TREE\n\n");
+            tree = rbt_create();
+            break;
         case 'i':
             printf("\n\n\tINSERT\n\n");
             printf("\tType the key of the node you would like to insert. Zero is not allowed. Press 0 to abort: ");
@@ -44,7 +48,7 @@ int main()
             getchar();
             if (usr_int == 0)
                 continue;
-            rt = rbt_insert(usr_int);
+            rt = rbt_insert(&tree, usr_int);
             if (rt == 2)
             {
                 printf("\tFATAL ERROR: You have no memory (heap allocation failed) and the program will terminate\n");
@@ -67,7 +71,7 @@ int main()
             getchar();
             if (usr_int == 0)
                 continue;
-            rt = rbt_delete(usr_int);
+            rt = rbt_delete(&tree, usr_int);
             if (rt == 3)
             {
                 printf("\tFATAL ERROR: Esoteric mistake. Shoot the programmer. This program is dead\n");
@@ -94,7 +98,7 @@ int main()
                 assert(0);
         case 'p':
             printf("\n\n\tPRINT\n\n");
-            rt = rbt_print();
+            rt = rbt_print(tree);
             if (rt == 1)
                 printf("\tThe tree is empty\n");
             break;

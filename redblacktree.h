@@ -19,7 +19,7 @@ struct sentinel
 
 /*
     Creates a new red black tree and returns a handle to the main node of it
-    
+
     returns a pointer to the struct of the sentinel node of the red black tree
     returns NULL if memory allocation failed
 */
@@ -52,6 +52,5 @@ int rbt_delete(handler *tree, int key);
     returns 1 if the tree is empty
 */
 int rbt_print(handler tree);
-
 
 #endif
