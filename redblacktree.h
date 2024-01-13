@@ -18,13 +18,21 @@ struct sentinel
 };
 
 /*
+    Creates a new red black tree and returns a handle to the main node of it
+    
+    returns a pointer to the struct of the sentinel node of the red black tree
+    returns NULL if memory allocation failed
+*/
+handler rbt_create(void);
+
+/*
     Red-Black Tree Node Insertion
 
     returns 0 if the node was added succesfully
     returns 1 when the node already exists
     returns 2 when there is no memory left on heap
 */
-int rbt_insert(int key);
+int rbt_insert(handler *tree, int key);
 
 /*
     Red-Black Tree Node Deletion
@@ -35,7 +43,7 @@ int rbt_insert(int key);
     returns 3 when there is a broken pointer
     returns 4 when the tree is empty (root == NULL)
 */
-int rbt_delete(int key);
+int rbt_delete(handler *tree, int key);
 
 /*
     Prints the entire Red-Black Tree
@@ -43,14 +51,7 @@ int rbt_delete(int key);
     returns 0 if executed correctly
     returns 1 if the tree is empty
 */
-int rbt_print(void);
+int rbt_print(handler tree);
 
-/*
-    Creates a new red black tree and returns a handle to the main node of it
-    
-    returns a pointer to the struct of the sentinel node of the red black tree
-    returns NULL if memory allocation failed
-*/
-handler rbt_create(void);
 
 #endif

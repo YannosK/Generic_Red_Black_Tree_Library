@@ -5,7 +5,7 @@
 // #define NDEBUG
 #include <assert.h>
 
-node root = NULL;
+// node root = NULL;
 
 /*******************************************************************************/
 // INTERNAL FUNCTIONS
@@ -16,7 +16,7 @@ node root = NULL;
 
     returns 1 if successful
 */
-int rotate_left(node *x)
+int rotate_left(handler* tree, node *x)
 {
     assert((*x) != NULL && (*x)->right != NULL);
 
@@ -30,7 +30,7 @@ int rotate_left(node *x)
 
     y->parent = (*x)->parent;
     if ((*x)->parent == NULL)
-        root = y;
+        (*tree)->root = y;
     else if ((*x) == (*x)->parent->left)
         (*x)->parent->left = y;
     else if ((*x) == (*x)->parent->right)
@@ -49,7 +49,7 @@ int rotate_left(node *x)
 
     returns 1 if successful
 */
-int rotate_right(node *x)
+int rotate_right(handler* tree, node *x)
 {
     assert((*x) != NULL && (*x)->left != NULL);
 
@@ -63,7 +63,7 @@ int rotate_right(node *x)
 
     y->parent = (*x)->parent;
     if ((*x)->parent == NULL)
-        root = y;
+        (*tree)->root = y;
     else if ((*x) == (*x)->parent->left)
         (*x)->parent->left = y;
     else if ((*x) == (*x)->parent->right)
@@ -82,7 +82,7 @@ int rotate_right(node *x)
 
     returns the number of rotations performed during the fixup
 */
-int insert_fixup(node *x)
+int insert_fixup(handler *tree, node *x)
 {
     assert((*x) != NULL);
 
@@ -118,14 +118,14 @@ int insert_fixup(node *x)
                 {
                     printf("\t\tCASE 2\n");
                     (*x) = (*x)->parent;
-                    rl = rotate_left(x) + rl;
+                    rl = rotate_left(tree, x) + rl;
                 }
                 assert((*x)->parent->parent != NULL);
                 printf("\t\tCASE 3\n");
                 (*x)->parent->color = 'b';
                 (*x)->parent->parent->color = 'r';
                 aux = (*x)->parent->parent;
-                rr = rotate_right(&aux) + rr;
+                rr = rotate_right(tree, &aux) + rr;
             }
         }
         else if ((*x)->parent == (*x)->parent->parent->right)
@@ -147,21 +147,21 @@ int insert_fixup(node *x)
                 {
                     printf("\t\tCASE 2\n");
                     (*x) = (*x)->parent;
-                    rr = rotate_right(x) + rr;
+                    rr = rotate_right(tree, x) + rr;
                 }
                 assert((*x)->parent->parent != NULL);
                 printf("\t\tCASE 3\n");
                 (*x)->parent->color = 'b';
                 (*x)->parent->parent->color = 'r';
                 aux = (*x)->parent->parent;
-                rl = rotate_left(&aux) + rl;
+                rl = rotate_left(tree, &aux) + rl;
             }
         }
         else
             assert(0);
     }
     printf("\t\tCASE 0\n");
-    root->color = 'b';
+    (*tree)->root->color = 'b';
     return rr + rl;
 }
 
@@ -172,12 +172,12 @@ int insert_fixup(node *x)
     returns 0 if executed correctly
     returns 1 if we inserted a node with broken pointers on the parent side
 */
-int delete_transplant(node *d, node *t)
+int delete_transplant(handler* tree, node *d, node *t)
 {
     assert((*d) != NULL && (*t) != NULL & (*t)->parent != NULL);
 
     if ((*d)->parent == NULL)
-        root = (*t);
+        (*tree)->root = (*t);
     else
     {
         if ((*d) == (*d)->parent->left)
@@ -199,7 +199,7 @@ int delete_transplant(node *d, node *t)
     returns 0 if executed correctly
     returns 1 if (*x) has broken pointers
 */
-int delete_fixup(node *x)
+int delete_fixup(handler* tree, node *x)
 {
     assert((*x) != NULL);
 
@@ -219,7 +219,7 @@ int delete_fixup(node *x)
     else
         flag = 0;
 
-    while ((*x)->color == 'b' && (*x) != root)
+    while ((*x)->color == 'b' && (*x) != (*tree)->root)
     {
         assert((*x) != NULL);
         assert((*x)->parent != NULL);
@@ -236,7 +236,7 @@ int delete_fixup(node *x)
                     w->color = 'b';
                     (*x)->parent->color = 'r';
                     p = (*x)->parent;
-                    rotate_left(&p);
+                    rotate_left(tree, &p);
                     assert((*x) == (*x)->parent->left);
                     w = (*x)->parent->right;
                 }
@@ -257,7 +257,7 @@ int delete_fixup(node *x)
                             printf("\t\t\tTYPE 3\n");
                             w->left->color = 'b';
                             w->color = 'r';
-                            rotate_right(&w);
+                            rotate_right(tree, &w);
                             assert((*x) == (*x)->parent->left);
                             w = (*x)->parent->right;
                         }
@@ -267,8 +267,8 @@ int delete_fixup(node *x)
                         assert(w->right != NULL);
                         w->right->color = 'b';
                         p = (*x)->parent;
-                        rotate_left(&p);
-                        (*x) = root;
+                        rotate_left(tree, &p);
+                        (*x) = (*tree)->root;
                     }
 
                     if (w->color != 'r' && w->color != 'b')
@@ -278,7 +278,7 @@ int delete_fixup(node *x)
             else
             {
                 printf("\t\t\tTYPE 0\n"); // sibling is null
-                if ((*x)->parent != root)
+                if ((*x)->parent != (*tree)->root)
                     assert(0);
             }
         }
@@ -294,7 +294,7 @@ int delete_fixup(node *x)
                     w->color = 'b';
                     (*x)->parent->color = 'r';
                     p = (*x)->parent;
-                    rotate_right(&p);
+                    rotate_right(tree, &p);
                     assert((*x) == (*x)->parent->right);
                     w = (*x)->parent->left;
                 }
@@ -315,7 +315,7 @@ int delete_fixup(node *x)
                             printf("\t\t\tTYPE 3\n");
                             w->right->color = 'b';
                             w->color = 'r';
-                            rotate_left(&w);
+                            rotate_left(tree, &w);
                             assert((*x) == (*x)->parent->right);
                             w = (*x)->parent->left;
                         }
@@ -325,8 +325,8 @@ int delete_fixup(node *x)
                         assert(w->left != NULL);
                         w->left->color = 'b';
                         p = (*x)->parent;
-                        rotate_right(&p);
-                        (*x) = root;
+                        rotate_right(tree, &p);
+                        (*x) = (*tree)->root;
                     }
 
                     if (w->color != 'r' && w->color != 'b')
@@ -336,7 +336,7 @@ int delete_fixup(node *x)
             else
             {
                 printf("\t\t\tTYPE 0\n"); // sibling is null
-                if ((*x)->parent != root)
+                if ((*x)->parent != (*tree)->root)
                     assert(0);
             }
         }
@@ -429,21 +429,21 @@ int print_recursive(node x, int level)
     returns -4 if a path to NULL has more or less black nodes than the other paths
     returns -5 if the tree is empty
 */
-int watchdog_rbt_selfcheck(node r, int blacks, int nill_blacks)
+int watchdog_rbt_selfcheck(handler tree, node r, int blacks, int nill_blacks)
 {
     assert(blacks >= 0 && nill_blacks >= 0);
 
     int rt;
 
-    if (r == root || root == NULL)
+    if (r == tree->root || tree->root == NULL)
     {
-        if (root == NULL)
+        if (tree->root == NULL)
             return -5;
         else
         {
-            if (root->color != 'r' && root->color != 'b')
+            if (tree->root->color != 'r' && tree->root->color != 'b')
                 return -1;
-            else if (root->color == 'r' || root->parent != NULL)
+            else if (tree->root->color == 'r' || tree->root->parent != NULL)
                 return -2;
         }
     }
@@ -478,7 +478,7 @@ int watchdog_rbt_selfcheck(node r, int blacks, int nill_blacks)
 
         if (r->left != NULL)
         {
-            rt = watchdog_rbt_selfcheck(r->left, blacks, nill_blacks);
+            rt = watchdog_rbt_selfcheck(tree, r->left, blacks, nill_blacks);
 
             if (rt < 0)
             {
@@ -509,7 +509,7 @@ int watchdog_rbt_selfcheck(node r, int blacks, int nill_blacks)
 
         if (r->right != NULL)
         {
-            rt = watchdog_rbt_selfcheck(r->right, blacks, nill_blacks);
+            rt = watchdog_rbt_selfcheck(tree, r->right, blacks, nill_blacks);
 
             if (rt < 0)
             {
@@ -547,7 +547,7 @@ int watchdog_rbt_selfcheck(node r, int blacks, int nill_blacks)
 
     returns 0 if the structure is a RBT
 */
-int watchdog_file_logger(void)
+int watchdog_file_logger(handler tree)
 {
     int rt;
     int x = 5;
@@ -556,7 +556,7 @@ int watchdog_file_logger(void)
 
     // printf("\n\n\tUTILITY: checking if we have a RBT\n\n");
 
-    rt = watchdog_rbt_selfcheck(root, 0, 0);
+    rt = watchdog_rbt_selfcheck(tree, tree->root, 0, 0);
 
     if (rt < 0)
     {
@@ -603,7 +603,7 @@ int watchdog_file_logger(void)
     }
     else
     {
-        assert(rt >= 0 && root != NULL);
+        assert(rt >= 0 && tree->root != NULL);
         // printf("\tThe structure is a RBT with root %d and %d black nodes from root to NULL nodes.", root->key, rt);
         return 0;
     }
@@ -622,13 +622,13 @@ handler rbt_create(void)
     return tree;
 }
 
-int rbt_insert(int key)
+int rbt_insert(handler *tree, int key)
 {
     node aux1, aux2;
     int rot;
 
     aux2 = NULL;
-    aux1 = root;
+    aux1 = (*tree)->root;
     while (aux1 != NULL)
     {
         aux2 = aux1;
@@ -652,7 +652,7 @@ int rbt_insert(int key)
     new->right = NULL;
 
     if (aux2 == NULL)
-        root = new;
+        (*tree)->root = new;
     else if (key < aux2->key)
         aux2->left = new;
     else if (key > aux2->key)
@@ -660,16 +660,16 @@ int rbt_insert(int key)
     else
         assert(0);
 
-    rot = insert_fixup(&new);
+    rot = insert_fixup(tree, &new);
     if (rot != 0)
         printf("\t%d rotations performed during fixup\n", rot);
 
     return 0;
 }
 
-int rbt_delete(int key)
+int rbt_delete(handler* tree, int key)
 {
-    if (root == NULL)
+    if ((*tree)->root == NULL)
         return 4;
 
     node d, temp, aux, T;
@@ -677,7 +677,7 @@ int rbt_delete(int key)
     int flag = 0;
     char og_color;
 
-    d = root;
+    d = (*tree)->root;
 
     while (d != NULL)
     {
@@ -699,7 +699,7 @@ int rbt_delete(int key)
             if (d->parent == NULL)
             {
                 printf(".1\n");
-                root = NULL;
+                (*tree)->root = NULL;
                 og_color = 'r';
             }
             else
@@ -750,14 +750,14 @@ int rbt_delete(int key)
         {
             printf("\t\tCASE 2\n");
             temp = d->right;
-            delete_transplant(&d, &temp);
+            delete_transplant(tree, &d, &temp);
             free(d);
         }
         else if (d->right == NULL && d->left != NULL)
         {
             printf("\t\tCASE 3\n");
             temp = d->left;
-            delete_transplant(&d, &temp);
+            delete_transplant(tree, &d, &temp);
             free(d);
         }
         else if (d->left != NULL && d->right != NULL)
@@ -791,12 +791,12 @@ int rbt_delete(int key)
                 T->parent = temp;
             }
 
-            delete_transplant(&temp, &aux);
+            delete_transplant(tree, &temp, &aux);
             temp->right = d->right;
             temp->right->parent = temp;
             assert(temp->left == NULL);
 
-            delete_transplant(&d, &temp);
+            delete_transplant(tree, &d, &temp);
             temp->left = d->left;
             assert(temp->left != NULL);
             temp->left->parent = temp;
@@ -811,7 +811,7 @@ int rbt_delete(int key)
 
         if (og_color == 'b')
         {
-            rt = delete_fixup(&temp);
+            rt = delete_fixup(tree, &temp);
             if (rt == 0)
                 return 0;
             else if (rt == 1)
@@ -846,7 +846,7 @@ int rbt_delete(int key)
         return 1;
 }
 
-int rbt_print(void)
+int rbt_print(handler tree)
 {
-    return print_recursive(root, 0);
+    return print_recursive(tree->root, 0);
 }
