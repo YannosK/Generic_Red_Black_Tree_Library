@@ -78,7 +78,19 @@ int main()
                 break;
             case 'i':
                 printf("\n\n\tINSERT\n\n");
-                printf("\tType the key of the node you would like to insert. Zero is not allowed. Press 0 to abort: ");
+                printf("\tYou can insert nodes by specifying the tree ID and the node key. Press 0 to abort: ");
+                if (1 != scanf("%d", &usr_int))
+                    return 1;
+                getchar();
+                if (usr_int == 0)
+                    continue;
+                printf("\t\tFirst select the tree by its ID. Press 0 to see the available trees and their IDs: ");
+                if (1 != scanf("%d", &usr_int))
+                    return 1;
+                getchar();
+                if (usr_int == 0)
+                    continue;
+                printf("\t\tInsert the node key. 0 is not allowed: ");
                 if (1 != scanf("%d", &usr_int))
                     return 1;
                 getchar();
@@ -101,7 +113,19 @@ int main()
                     assert(0);
             case 'd':
                 printf("\n\n\tDELETE\n\n");
-                printf("\tType the key of the node you would like to delete. Press 0 to abort: ");
+                printf("\tYou can delete nodes by specifying the tree ID and the node key. Press 0 to abort: ");
+                if (1 != scanf("%d", &usr_int))
+                    return 1;
+                getchar();
+                if (usr_int == 0)
+                    continue;
+                printf("\t\tFirst select the tree by its ID. Press 0 to see the available trees and their IDs: ");
+                if (1 != scanf("%d", &usr_int))
+                    return 1;
+                getchar();
+                if (usr_int == 0)
+                    continue;
+                printf("\t\tInsert the node key. 0 is not allowed: ");
                 if (1 != scanf("%d", &usr_int))
                     return 1;
                 getchar();
