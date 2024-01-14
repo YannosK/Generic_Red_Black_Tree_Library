@@ -70,7 +70,10 @@ int main()
                     printf("\tNo red-black trees where ever created\n");
                 else
                 {
-                    printf("\tThere are %lu red-black trees\n", (sizeof(*int_handle)) >> 2);
+                    printf("\tThe available red-black trees have IDs:\n\n");
+                    int i;
+                    for (i = 0; *(int_handle + i) != 0; i++)
+                        printf("\t%d\n", *(int_handle + i));
                 }
                 break;
             case 'i':
