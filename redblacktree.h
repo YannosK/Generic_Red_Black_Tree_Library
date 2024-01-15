@@ -53,7 +53,7 @@ int rbt_insert(unsigned int tree_id, unsigned int key);
     returns 3 when there is a broken pointer
     returns 4 when the tree is empty (root == NULL)
 */
-int rbt_delete(handler *tree, int key);
+int rbt_delete(unsigned int tree_id, unsigned int key);
 
 /*
     Returns an array of integers with the IDs of all the created trees

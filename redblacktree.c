@@ -825,9 +825,11 @@ int rbt_insert(unsigned int tree_id, unsigned int key)
     return 0;
 }
 
-int rbt_delete(handler *tree, int key)
+int rbt_delete(unsigned int tree_id, unsigned int key)
 {
-    if ((*tree)->root == NULL)
+    handler tree = tree_find(tree_id);
+
+    if (tree->root == NULL)
         return 4;
 
     node d, temp, aux, T;
@@ -835,7 +837,7 @@ int rbt_delete(handler *tree, int key)
     int flag = 0;
     char og_color;
 
-    d = (*tree)->root;
+    d = tree->root;
 
     while (d != NULL)
     {
@@ -857,7 +859,7 @@ int rbt_delete(handler *tree, int key)
             if (d->parent == NULL)
             {
                 printf(".1\n");
-                (*tree)->root = NULL;
+                tree->root = NULL;
                 og_color = 'r';
             }
             else
@@ -908,14 +910,14 @@ int rbt_delete(handler *tree, int key)
         {
             printf("\t\tCASE 2\n");
             temp = d->right;
-            delete_transplant(tree, &d, &temp);
+            delete_transplant(&tree, &d, &temp);
             free(d);
         }
         else if (d->right == NULL && d->left != NULL)
         {
             printf("\t\tCASE 3\n");
             temp = d->left;
-            delete_transplant(tree, &d, &temp);
+            delete_transplant(&tree, &d, &temp);
             free(d);
         }
         else if (d->left != NULL && d->right != NULL)
@@ -949,12 +951,12 @@ int rbt_delete(handler *tree, int key)
                 T->parent = temp;
             }
 
-            delete_transplant(tree, &temp, &aux);
+            delete_transplant(&tree, &temp, &aux);
             temp->right = d->right;
             temp->right->parent = temp;
             assert(temp->left == NULL);
 
-            delete_transplant(tree, &d, &temp);
+            delete_transplant(&tree, &d, &temp);
             temp->left = d->left;
             assert(temp->left != NULL);
             temp->left->parent = temp;
@@ -969,7 +971,7 @@ int rbt_delete(handler *tree, int key)
 
         if (og_color == 'b')
         {
-            rt = delete_fixup(tree, &temp);
+            rt = delete_fixup(&tree, &temp);
             if (rt == 0)
                 return 0;
             else if (rt == 1)
