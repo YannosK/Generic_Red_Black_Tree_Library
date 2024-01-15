@@ -763,22 +763,33 @@ unsigned int rbt_create(void)
 int rbt_insert(int tree_id, int key)
 {
     list instance;
-    handler *tree;
+    handler tree;
     node aux1, aux2;
     int rot;
 
     // find the tree we want
     instance = rbt_list_head;
     assert(instance != NULL);
+    assert(instance->n != NULL);
+    assert(instance->n->No == 1);
+    assert(instance->n->No == tree_id);
+    assert(instance->n->tree != NULL);
+    assert(instance->n->tree->root == NULL);
     while (instance->No != tree_id)
     {
         instance = instance->n;
         assert(instance != NULL);
     }
-    (*tree) = instance->tree;
+    assert(instance->tree->root == NULL);
+    // assert(0);
+    tree = instance->tree;
+    assert(tree->root == NULL);
+
+    // assert(0);
 
     aux2 = NULL;
-    aux1 = (*tree)->root;
+    aux1 = tree->root;
+    assert(aux1 == NULL);
     while (aux1 != NULL)
     {
         aux2 = aux1;
@@ -802,7 +813,7 @@ int rbt_insert(int tree_id, int key)
     new->right = NULL;
 
     if (aux2 == NULL)
-        (*tree)->root = new;
+        tree->root = new;
     else if (key < aux2->key)
         aux2->left = new;
     else if (key > aux2->key)
@@ -810,7 +821,7 @@ int rbt_insert(int tree_id, int key)
     else
         assert(0);
 
-    rot = insert_fixup(tree, &new);
+    rot = insert_fixup(&tree, &new);
     if (rot != 0)
         printf("\t%d rotations performed during fixup\n", rot);
 
