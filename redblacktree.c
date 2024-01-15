@@ -11,6 +11,16 @@
 /****************************************************************************************************************************************************************/
 /****************************************************************************************************************************************************************/
 
+/*
+    pointer to the struct of a node in a tree
+
+    contains:
+        key : key of the node
+        color : color of the node
+        left : pointer to left node
+        right : pointer to right node
+        parent : pointer to parent
+*/
 typedef struct node_struct *node;
 struct node_struct
 {
@@ -21,12 +31,29 @@ struct node_struct
     node parent;
 };
 
+/*
+    pointer to the struct that describes a tree - the tree representative / sentinel
+
+    contains
+        root : pointer to the root node of the tree
+*/
 typedef struct sentinel *handler;
 struct sentinel
 {
     node root;
 };
 
+/*
+    pointer to a struct that is a member of a list of all the created trees
+    each tree should have such a struct, other than a sentinel struct
+
+    contains:
+        No : ID of current tree
+        multitude : the number of all created trees - this info is updated only in the head and the tail of the list
+        tree : pointer to the sentinel struct of the tree
+        n : pointer to the next tree
+        b : pointer to the previous tree
+*/
 typedef struct tree_list *list;
 struct tree_list
 {
@@ -48,7 +75,7 @@ list rbt_list_tail = NULL;
 
 /*
     Takes the integer ID of a tree and returns a handle to the tree sentinel (root struct)
- */
+*/
 handler tree_find(unsigned int tree_id)
 {
     list instance;
