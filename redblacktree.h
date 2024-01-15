@@ -1,22 +1,6 @@
 #ifndef redblacktree
 #define redblacktree
 
-typedef struct node_struct *node;
-struct node_struct
-{
-    unsigned int key;
-    char color; // 'b' is black and 'r' is red
-    node left;
-    node right;
-    node parent;
-};
-
-typedef struct sentinel *handler;
-struct sentinel
-{
-    node root;
-};
-
 /*
     Initialize function of the library
     It is vital in order to have many instances of red-black trees

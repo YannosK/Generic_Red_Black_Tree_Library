@@ -18,7 +18,6 @@ int main()
     char usr_char;
     int usr_int, usr_int2, rt, i;
     int *int_handle;
-    handler tree;
 
     usr_char = 'z';
 
