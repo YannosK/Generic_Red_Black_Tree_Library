@@ -94,7 +94,7 @@ int main()
                         continue;
                     else
                     {
-                        printf("\t\tFirst select the tree by its ID. Press 0 to see the available trees and their IDs: ");
+                        printf("\t\tFirst select the tree by its ID. Press 0 to see the available trees and their IDs: "); // needs an enum
                         if (1 != scanf("%d", &usr_int))
                             return 1;
                         getchar();

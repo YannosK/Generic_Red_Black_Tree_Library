@@ -760,10 +760,22 @@ unsigned int rbt_create(void)
     return rbt_list_tail->No;
 }
 
-int rbt_insert(handler *tree, int key)
+int rbt_insert(int tree_id, int key)
 {
+    list instance;
+    handler *tree;
     node aux1, aux2;
     int rot;
+
+    // find the tree we want
+    instance = rbt_list_head;
+    assert(instance != NULL);
+    while (instance->No != tree_id)
+    {
+        instance = instance->n;
+        assert(instance != NULL);
+    }
+    (*tree) = instance->tree;
 
     aux2 = NULL;
     aux1 = (*tree)->root;

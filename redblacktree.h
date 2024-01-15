@@ -42,7 +42,7 @@ unsigned int rbt_create(void);
     returns 1 when the node already exists
     returns 2 when there is no memory left on heap
 */
-int rbt_insert(handler *tree, int key);
+int rbt_insert(int tree_id, int key);
 
 /*
     Red-Black Tree Node Deletion
