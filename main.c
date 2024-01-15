@@ -78,39 +78,56 @@ int main()
                 break;
             case 'i':
                 printf("\n\n\tINSERT\n\n");
-                printf("\tYou can insert nodes by specifying the tree ID and the node key. Press 0 to abort: ");
-                if (1 != scanf("%d", &usr_int))
-                    return 1;
-                getchar();
-                if (usr_int == 0)
-                    continue;
-                printf("\t\tFirst select the tree by its ID. Press 0 to see the available trees and their IDs: ");
-                if (1 != scanf("%d", &usr_int))
-                    return 1;
-                getchar();
-                if (usr_int == 0)
-                    continue;
-                printf("\t\tInsert the node key. 0 is not allowed: ");
-                if (1 != scanf("%d", &usr_int))
-                    return 1;
-                getchar();
-                if (usr_int == 0)
-                    continue;
-                rt = rbt_insert(&tree, usr_int);
-                if (rt == 2)
+                int_handle = rbt_show();
+                if (int_handle == NULL)
                 {
-                    printf("\tFATAL ERROR: You have no memory (heap allocation failed) and the program will terminate\n");
-                    return 2;
+                    printf("\tNo red-black trees where ever created.\nPlease select choice a. from menu\n");
+                    continue;
                 }
-                else if (rt == 1)
-                {
-                    printf("\tA node with the inserted key already exists.\n");
-                    break;
-                }
-                else if (rt == 0)
-                    break;
                 else
-                    assert(0);
+                {
+                    printf("\tYou can insert nodes by specifying the tree ID and the node key. Press 0 to abort: ");
+                    if (1 != scanf("%d", &usr_int))
+                        return 1;
+                    getchar();
+                    if (usr_int == 0)
+                        continue;
+                    else
+                    {
+                        printf("\t\tFirst select the tree by its ID. Press 0 to see the available trees and their IDs: ");
+                        if (1 != scanf("%d", &usr_int))
+                            return 1;
+                        getchar();
+                        if (usr_int == 0)
+                        {
+                            // show trees
+                        }
+                        printf("\t\tInsert the node key. 0 is not allowed. If you enter zero it will abort: ");
+                        if (1 != scanf("%d", &usr_int))
+                            return 1;
+                        getchar();
+                        if (usr_int == 0)
+                            continue;
+                        else
+                        {
+                            rt = rbt_insert(&tree, usr_int);
+                            if (rt == 2)
+                            {
+                                printf("\tFATAL ERROR: You have no memory (heap allocation failed) and the program will terminate\n");
+                                return 2;
+                            }
+                            else if (rt == 1)
+                            {
+                                printf("\tA node with the inserted key already exists.\n");
+                                break;
+                            }
+                            else if (rt == 0)
+                                break;
+                            else
+                                assert(0);
+                        }
+                    }
+                }
             case 'd':
                 printf("\n\n\tDELETE\n\n");
                 printf("\tYou can delete nodes by specifying the tree ID and the node key. Press 0 to abort: ");
