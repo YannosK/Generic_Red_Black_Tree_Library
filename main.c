@@ -141,7 +141,7 @@ int main()
                             }
                         }
                         else if ((*(int_handle + i + 1)) == 0)
-                            printf("\n\tYour entered an ID that does not exist\n");
+                            printf("\n\tYou entered an ID that does not exist\n");
                     }
                 }
             }
