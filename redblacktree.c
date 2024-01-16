@@ -21,24 +21,36 @@ struct node_struct
     node parent;
 };
 
+// typedef struct sentinel *handler;
+// struct sentinel
+// {
+//     node root;
+// };
+
+/*
+    Pointer to the defining struct of each tree. The sentinel of the tree
+    It is a member of a list that contains all the trees
+
+    Contains:
+    No          : the integer ID of the tree
+    multitude   : number of all the trees, only updated on the head and the tail of the list
+    root        : pointer to the root node of the tree
+    n           : pointer to the next tree
+    b           : pointer to the previous tree
+*/
 typedef struct sentinel *handler;
 struct sentinel
 {
-    node root;
-};
-
-typedef struct tree_list *list;
-struct tree_list
-{
     unsigned int No;
     unsigned int multitude;
-    handler tree;
-    list n;
-    list b;
+    // handler tree;
+    node root;
+    handler n;
+    handler b;
 };
 
-list rbt_list_head = NULL;
-list rbt_list_tail = NULL;
+handler head_rbt_list = NULL;
+handler tail_rbt_list = NULL;
 
 /****************************************************************************************************************************************************************/
 /****************************************************************************************************************************************************************/
@@ -49,19 +61,19 @@ list rbt_list_tail = NULL;
 /*
     Takes the integer ID of a tree and returns a handle to the tree sentinel (root struct)
  */
-handler tree_find(unsigned int tree_id)
-{
-    list instance;
+// handler tree_find(unsigned int tree_id)
+// {
+//     list instance;
 
-    instance = rbt_list_head;
-    while (instance->No != tree_id)
-    {
-        instance = instance->n;
-        assert(instance != NULL);
-    }
+//     instance = head_rbt_list;
+//     while (instance->No != tree_id)
+//     {
+//         instance = instance->n;
+//         assert(instance != NULL);
+//     }
 
-    return instance->tree;
-}
+//     return instance->tree;
+// }
 
 /*
     Left Rotation on Red-Black Tree Node
@@ -667,136 +679,96 @@ int watchdog_file_logger(handler tree)
 /****************************************************************************************************************************************************************/
 /****************************************************************************************************************************************************************/
 
-void *rbt_init(void)
-{
-    assert(rbt_list_tail == NULL && rbt_list_head == NULL);
+// void *rbt_init(void)
+// {
+//     assert(rbt_list_tail == NULL && rbt_list_head == NULL);
 
-    list instance = (list)malloc(sizeof(struct tree_list));
-    if (instance == NULL)
-        return NULL;
+//     handler instance = (handler)malloc(sizeof(struct sentinel));
+//     if (instance == NULL)
+//         return NULL;
 
-    instance->n = NULL;
-    instance->b = NULL;
-    instance->multitude = 0;
-    instance->tree = NULL;
-    instance->No = 0;
+//     instance->n = NULL;
+//     instance->b = NULL;
+//     instance->multitude = 0;
+//     instance->root = NULL;
+//     instance->No = 0;
 
-    rbt_list_tail = instance;
-    rbt_list_head = rbt_list_tail;
+//     rbt_list_tail = instance;
+//     rbt_list_head = rbt_list_tail;
 
-    assert(rbt_list_tail != NULL && rbt_list_head != NULL);
+//     assert(rbt_list_tail != NULL && rbt_list_head != NULL);
 
-    return rbt_list_tail;
-}
+//     return rbt_list_tail;
+// }
 
 unsigned int rbt_create(void)
 {
-    assert(rbt_list_tail != NULL && rbt_list_head != NULL);
-
-    handler tree = (handler)malloc(sizeof(struct sentinel));
-    if (tree == NULL)
-        return 0;
-    tree->root = NULL;
-
-    list instance = (list)malloc(sizeof(struct tree_list));
-    if (instance == NULL)
-        return 0;
-
-    list aux = rbt_list_head;
-
-    if (aux->n == NULL)
+    if (tail_rbt_list == NULL && head_rbt_list == NULL)
     {
-        instance->n = NULL;
-        instance->b = rbt_list_head;
-        rbt_list_head->n = instance;
+        assert(tail_rbt_list == NULL && head_rbt_list == NULL);
 
+        handler instance = (handler)malloc(sizeof(struct sentinel));
+        if (instance == NULL)
+            return NULL;
+
+        instance->n = NULL;
+        instance->b = NULL;
         instance->multitude = 1;
-        instance->tree = tree;
+        instance->root = NULL;
         instance->No = 1;
 
-        rbt_list_tail = instance;
-        rbt_list_head->multitude = rbt_list_tail->multitude;
+        tail_rbt_list = instance;
+        head_rbt_list = tail_rbt_list;
 
-        return instance->No;
+        assert(tail_rbt_list != NULL && head_rbt_list != NULL);
     }
-    else
+    else if (tail_rbt_list != NULL && head_rbt_list != NULL)
     {
-        if (aux->n->No != 1)
+        handler instance = (handler)malloc(sizeof(struct sentinel));
+        if (instance == NULL)
+            return 0;
+        instance->root = NULL;
+
+        handler aux = head_rbt_list;
+        assert(aux != NULL);
+
+        while (aux->n != NULL && ((aux->n->No) - (aux->No) > 1))
+            aux = aux->n;
+
+        if (aux->n == NULL)
         {
-            instance->n = rbt_list_head->n;
-            rbt_list_head->n->b = instance;
-            instance->b = rbt_list_head;
-            rbt_list_head->n = instance;
+            assert(aux == tail_rbt_list);
 
-            instance->multitude = rbt_list_tail->multitude + 1;
-            instance->tree = tree;
-            instance->No = 1;
+            instance->n = NULL;
+            instance->b = aux;
+            aux->n = instance;
 
-            assert(instance->multitude - rbt_list_tail->multitude == 1);
+            instance->multitude = tail_rbt_list->multitude + 1;
+            instance->No = aux->No + 1;
 
-            rbt_list_tail->multitude = instance->multitude;
-            rbt_list_head->multitude = rbt_list_tail->multitude;
+            tail_rbt_list = instance;
+            head_rbt_list->multitude = tail_rbt_list->multitude;
 
             return instance->No;
         }
         else
         {
-            aux = aux->n;
-            while (aux->n != NULL)
-            {
-                if ((aux->n->No - aux->No) > 1)
-                    break;
-                else
-                    aux = aux->n;
-            }
+            instance->n = aux->n;
+            aux->n->b = instance;
+            instance->b = aux;
+            aux->n = instance;
 
-            if (aux->n == NULL)
-            {
-                instance->n = NULL;
-                instance->b = aux;
-                aux->n = instance;
+            instance->No = aux->No + 1;
+            instance->multitude = tail_rbt_list->multitude + 1;
 
-                instance->multitude = rbt_list_tail->multitude + 1;
-                instance->tree = tree;
-                instance->No = aux->No + 1;
+            tail_rbt_list->multitude = instance->multitude;
+            head_rbt_list->multitude = instance->multitude;
 
-                assert(instance->multitude == rbt_list_tail->multitude + 1);
-
-                rbt_list_tail = instance;
-                rbt_list_head->multitude = rbt_list_tail->multitude;
-
-                return instance->No;
-            }
-            else
-            {
-                instance->n = aux->n;
-                aux->n->b = instance;
-                instance->b = aux;
-                aux->n = instance;
-
-                instance->multitude = rbt_list_tail->multitude + 1;
-                instance->tree = tree;
-                instance->No = aux->No + 1;
-
-                assert(instance->multitude - rbt_list_tail->multitude == 1);
-
-                rbt_list_tail->multitude = instance->multitude;
-                rbt_list_head->multitude = rbt_list_tail->multitude;
-
-                return instance->No;
-            }
+            return instance->No;
         }
     }
-
-    instance->n = NULL;
-    instance->b = rbt_list_tail;
-    instance->multitude = rbt_list_tail->multitude + 1;
-    instance->tree = tree;
-    instance->No = rbt_list_tail->No + 1;
-
-    rbt_list_tail = instance;
-
-    return rbt_list_tail->No;
+    else
+        assert(0);
 }
 
 int rbt_insert(unsigned int tree_id, unsigned int key)
@@ -1042,9 +1014,9 @@ int *rbt_show(void)
 
             int *arr = (int *)malloc((rbt_list_tail->multitude + 1) * (sizeof(unsigned int)));
 
-            assert(rbt_list_head != NULL);
+            assert(head_rbt_list != NULL);
 
-            list aux = rbt_list_head;
+            list aux = head_rbt_list;
 
             assert(aux->n != NULL);
 
