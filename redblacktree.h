@@ -2,19 +2,9 @@
 #define redblacktree
 
 /*
-    Initialize function of the library
-    It is vital in order to have many instances of red-black trees
+    Creates a new red-black tree
 
-    returns a void pointer that is actually a pointer to the tail of the list of trees
-
-    WARNING: It must only be called one time by the function that wants to use the library
-*/
-void *rbt_init(void);
-
-/*
-    Creates a new red black tree and returns a handle to the main node of it
-
-    returns a the ID number of the red-black tree it created
+    returns the ID number of the red-black tree it created
     returns 0 if memory allocation failed
 */
 unsigned int rbt_create(void);
@@ -41,6 +31,10 @@ int rbt_delete(unsigned int tree_id, unsigned int key);
 
 /*
     Returns an array of integers with the IDs of all the created trees
+
+        WARNING:
+        the ouput is a pointer to a heap structure
+        after you use the ouput ofthe function copy it immidiately and free the memory
 
     returns NULL when no tree was ever created
     returns a pointer to a heap allocated array of integers that are the IDs of the trees. Last one will always be zero and not have to do with the tree
