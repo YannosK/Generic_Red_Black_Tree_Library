@@ -25,6 +25,23 @@ list rbt_list_tail = NULL;
 /****************************************************************************************************************************************************************/
 
 /*
+    Takes the integer id of a tree and returns a handle to the tree sentinel (root struct)
+ */
+handler tree_find(unsigned int tree_id)
+{
+    list instance;
+
+    instance = rbt_list_head;
+    while (instance->No != tree_id)
+    {
+        instance = instance->n;
+        assert(instance != NULL);
+    }
+
+    return instance->tree;
+}
+
+/*
     Left Rotation on Red-Black Tree Node
 
     returns 1 if successful
@@ -760,29 +777,29 @@ unsigned int rbt_create(void)
     return rbt_list_tail->No;
 }
 
-int rbt_insert(int tree_id, int key)
+int rbt_insert(unsigned int tree_id, unsigned int key)
 {
-    list instance;
     handler tree;
     node aux1, aux2;
     int rot;
+    // list instance;
 
-    // find the tree we want
-    instance = rbt_list_head;
-    assert(instance != NULL);
-    assert(instance->n != NULL);
-    assert(instance->n->No == 1);
-    assert(instance->n->No == tree_id);
-    assert(instance->n->tree != NULL);
-    assert(instance->n->tree->root == NULL);
-    while (instance->No != tree_id)
-    {
-        instance = instance->n;
-        assert(instance != NULL);
-    }
-    assert(instance->tree->root == NULL);
-    // assert(0);
-    tree = instance->tree;
+    // // find the tree we want
+    // instance = rbt_list_head;
+    // assert(instance != NULL);
+    // assert(instance->n != NULL);
+    // assert(instance->n->No == 1);
+    // assert(instance->n->No == tree_id);
+    // assert(instance->n->tree != NULL);
+    // assert(instance->n->tree->root == NULL);
+    // while (instance->No != tree_id)
+    // {
+    //     instance = instance->n;
+    //     assert(instance != NULL);
+    // }
+    // assert(instance->tree->root == NULL);
+    // // assert(0);
+    tree = tree_find(tree_id);
     assert(tree->root == NULL);
 
     // assert(0);
@@ -1044,7 +1061,7 @@ int *rbt_show(void)
     }
 }
 
-int rbt_print(handler tree)
+int rbt_print(unsigned int tree_id)
 {
-    return print_recursive(tree->root, 0);
+    // return print_recursive(tree->root, 0);
 }

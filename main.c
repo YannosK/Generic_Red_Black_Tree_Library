@@ -194,7 +194,11 @@ int main()
                     assert(0);
             case 'p':
                 printf("\n\n\tPRINT\n\n");
-                rt = rbt_print(tree);
+                printf("\n\tPlease enter the ID of the tree you would like to print: ");
+                if (1 != scanf("%d", &usr_int))
+                    return 1;
+                getchar();
+                // rt = rbt_print(tree);
                 if (rt == 1)
                     printf("\tThe tree is empty\n");
                 break;
