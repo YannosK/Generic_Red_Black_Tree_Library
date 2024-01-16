@@ -28,8 +28,6 @@ int main()
     }
     else
     {
-
-        // rt = rbt_insert(rbt_create(), 3);
         while (usr_char != 'q')
         {
             fflush(stdin);
