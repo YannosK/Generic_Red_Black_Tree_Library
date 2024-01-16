@@ -11,16 +11,6 @@
 /****************************************************************************************************************************************************************/
 /****************************************************************************************************************************************************************/
 
-/*
-    pointer to the struct of a node in a tree
-
-    contains:
-        key : key of the node
-        color : color of the node
-        left : pointer to left node
-        right : pointer to right node
-        parent : pointer to parent
-*/
 typedef struct node_struct *node;
 struct node_struct
 {
@@ -44,12 +34,6 @@ struct node_struct
 */
 typedef struct sentinel *handler;
 struct sentinel
-{
-    node root;
-};
-
-typedef struct tree_list *list;
-struct tree_list
 {
     unsigned int No;
     unsigned int multitude;
