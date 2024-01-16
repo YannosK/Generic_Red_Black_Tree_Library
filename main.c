@@ -198,9 +198,19 @@ int main()
                 if (1 != scanf("%d", &usr_int))
                     return 1;
                 getchar();
-                // rt = rbt_print(tree);
-                if (rt == 1)
-                    printf("\tThe tree is empty\n");
+                for (i = 0; *(int_handle + i) != 0; i++)
+                {
+                    if ((*(int_handle + i)) == usr_int)
+                    {
+                        rt = rbt_print(usr_int);
+                        if (rt == 1)
+                            printf("\tThe tree is empty\n");
+                        break;
+                    }
+                    else if ((*(int_handle + i + 1)) == 0)
+                        printf("\n\tYou entered an ID that does not exist\n");
+                }
+
                 break;
             default:
                 break;
@@ -210,3 +220,13 @@ int main()
 
     return 0;
 }
+// for (i = 0; *(int_handle + i) != 0; i++)
+// {
+//     if ((*(int_handle + i)) == usr_int)
+//     {
+//         // do stuff
+//         break;
+//     }
+//     else if ((*(int_handle + i + 1)) == 0)
+//         printf("\n\tYou entered an ID that does not exist\n");
+// }

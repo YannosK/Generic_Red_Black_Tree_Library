@@ -25,7 +25,7 @@ list rbt_list_tail = NULL;
 /****************************************************************************************************************************************************************/
 
 /*
-    Takes the integer id of a tree and returns a handle to the tree sentinel (root struct)
+    Takes the integer ID of a tree and returns a handle to the tree sentinel (root struct)
  */
 handler tree_find(unsigned int tree_id)
 {
@@ -782,31 +782,11 @@ int rbt_insert(unsigned int tree_id, unsigned int key)
     handler tree;
     node aux1, aux2;
     int rot;
-    // list instance;
 
-    // // find the tree we want
-    // instance = rbt_list_head;
-    // assert(instance != NULL);
-    // assert(instance->n != NULL);
-    // assert(instance->n->No == 1);
-    // assert(instance->n->No == tree_id);
-    // assert(instance->n->tree != NULL);
-    // assert(instance->n->tree->root == NULL);
-    // while (instance->No != tree_id)
-    // {
-    //     instance = instance->n;
-    //     assert(instance != NULL);
-    // }
-    // assert(instance->tree->root == NULL);
-    // // assert(0);
     tree = tree_find(tree_id);
-    assert(tree->root == NULL);
-
-    // assert(0);
 
     aux2 = NULL;
     aux1 = tree->root;
-    assert(aux1 == NULL);
     while (aux1 != NULL)
     {
         aux2 = aux1;
@@ -1063,5 +1043,5 @@ int *rbt_show(void)
 
 int rbt_print(unsigned int tree_id)
 {
-    // return print_recursive(tree->root, 0);
+    return print_recursive(tree_find(tree_id)->root, 0);
 }
