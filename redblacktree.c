@@ -625,7 +625,6 @@ int watchdog_file_logger(handler tree)
     else
     {
         assert(rt >= 0 && tree->root != NULL);
-        // printf("\tThe structure is a RBT with root %d and %d black nodes from root to NULL nodes.", root->key, rt);
         return 0;
     }
 }
@@ -662,6 +661,9 @@ unsigned int rbt_destroy(handler tree)
 
 int rbt_insert(handler tree, unsigned int key)
 {
+    if (tree->root != NULL)
+        watchdog_file_logger(tree);
+
     node aux1, aux2;
     int rot;
 
@@ -702,11 +704,14 @@ int rbt_insert(handler tree, unsigned int key)
     if (rot != 0)
         printf("\t%d rotations performed during fixup\n", rot);
 
+    watchdog_file_logger(tree);
     return 0;
 }
 
 int rbt_delete(handler tree, unsigned int key)
 {
+    watchdog_file_logger(tree);
+
     if (tree->root == NULL)
         return 4;
 
@@ -850,6 +855,7 @@ int rbt_delete(handler tree, unsigned int key)
         if (og_color == 'b')
         {
             rt = delete_fixup(&tree, &temp);
+            watchdog_file_logger(tree);
             if (rt == 0)
                 return 0;
             else if (rt == 1)
@@ -872,6 +878,8 @@ int rbt_delete(handler tree, unsigned int key)
 
                     free(T);
                     printf("\t\tSentinel is killed by rbt_delete\n");
+
+                    watchdog_file_logger(tree);
                     return 0;
                 }
                 else
@@ -880,7 +888,10 @@ int rbt_delete(handler tree, unsigned int key)
             else if (flag == 2)
                 return 5;
             else
+            {
+                watchdog_file_logger(tree);
                 return 0;
+            }
         }
     }
     else
