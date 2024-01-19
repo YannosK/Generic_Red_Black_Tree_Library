@@ -32,7 +32,6 @@ struct node_struct
     n           : pointer to the next tree
     b           : pointer to the previous tree
 */
-typedef struct sentinel *handler;
 struct sentinel
 {
     unsigned int No;

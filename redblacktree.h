@@ -2,6 +2,12 @@
 #define redblacktree
 
 /*
+    Pointer to the sentinel structs of each red-black tree
+    These structs have the definitive characteristics of the tree
+*/
+typedef struct sentinel *handler;
+
+/*
     Creates a new red-black tree
 
     returns the ID number of the red-black tree it created
