@@ -36,7 +36,7 @@ int main()
         printf("\n\n*******************************************************************************\n");
         printf("Previous choice %c\n", usr_char);
         printf("Select what would you like to do:\n");
-        printf("q: quit\na: create a new red black tree\ns: show all red-black trees with their IDs\ni: insert new node\nd: delete a node\np: print the red-black Tree\n");
+        printf("q: quit\ns: show all red-black trees with their IDs\ni: insert new node\nd: delete a node\np: print a red-black Tree\n");
         printf("Your choice: ");
         scanf("%c", &usr_char);
         getchar();
@@ -55,17 +55,6 @@ int main()
         case 'q':
             printf("\n\n\tQUIT\n\n");
             break;
-        case 'a':
-            printf("\n\n\tCREATE NEW RED-BLACK TREE\n\n");
-            rt = rbt_create();
-            if (rt == 0)
-            {
-                printf("\tFATAL ERROR: You have no memory (heap allocation failed) and the program will terminate\n");
-                return 2;
-            }
-            else
-                printf("\tRed-black tree created with ID No: %d\n", rt);
-            break;
         case 's':
             printf("\n\n\tSHOW RED-BLACK TREE INSTANCES\n\n");
             int_handle = rbt_show();
@@ -83,8 +72,49 @@ int main()
             int_handle = rbt_show();
             if (int_handle == NULL)
             {
-                printf("\tNo red-black trees were ever created.\n\tPlease select choice a. from menu\n");
-                continue;
+                printf("\tNo red-black trees were ever created. A new tree with a new ID will be created. Press any number to continue or 0 to abort:\n");
+                if (1 != scanf("%d", &usr_int))
+                    return 1;
+                getchar();
+                if (usr_int == 0)
+                    continue;
+                else
+                {
+                    usr_int = rbt_create();
+                    if (usr_int == 0)
+                    {
+                        printf("\t\tFATAL ERROR: You have no memory (heap allocation failed) and the program will terminate\n");
+                        return 2;
+                    }
+                    else
+                    {
+                        printf("\t\tInsert the key of the node you want to add. 0 is not allowed. If you enter zero it will abort: ");
+                        if (1 != scanf("%d", &usr_int2))
+                            return 1;
+                        getchar();
+                        if (usr_int2 == 0)
+                            break;
+                        else
+                        {
+                            rt = rbt_insert(usr_int, usr_int2);
+                            switch (rt)
+                            {
+                            case 2:
+                                printf("\n\t\tFATAL ERROR: You have no memory (heap allocation failed) and the program will terminate\n");
+                                return 2;
+                                break;
+                            case 1:
+                                printf("\n\t\tA node with the inserted key already exists.\n");
+                                break;
+                            case 0:
+                                break;
+                            default:
+                                assert(0);
+                                break;
+                            }
+                        }
+                    }
+                }
             }
             else
             {
@@ -122,22 +152,22 @@ int main()
                                 break;
                             else
                             {
-                                printf("\n\t\tInserting new node with key %d in tree %d\n\n", usr_int2, usr_int);
                                 rt = rbt_insert(usr_int, usr_int2);
-                                if (rt == 2)
+                                switch (rt)
                                 {
-                                    printf("\t\tFATAL ERROR: You have no memory (heap allocation failed) and the program will terminate\n");
+                                case 2:
+                                    printf("\n\t\tFATAL ERROR: You have no memory (heap allocation failed) and the program will terminate\n");
                                     return 2;
-                                }
-                                else if (rt == 1)
-                                {
-                                    printf("\t\tA node with the inserted key already exists.\n");
                                     break;
-                                }
-                                else if (rt == 0)
+                                case 1:
+                                    printf("\n\t\tA node with the inserted key already exists.\n");
                                     break;
-                                else
+                                case 0:
+                                    break;
+                                default:
                                     assert(0);
+                                    break;
+                                }
                             }
                         }
                         else if ((*(int_handle + i + 1)) == 0)

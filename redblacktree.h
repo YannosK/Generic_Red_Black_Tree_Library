@@ -11,6 +11,9 @@ unsigned int rbt_create(void);
 
 /*
     Destroys a red-black tree using its ID
+
+    returns 0 if it destroys a tree
+    returns 1 if it did not destroy the tree, because it wasn't empty
 */
 unsigned int rbt_destroy(unsigned int tree_id);
 
