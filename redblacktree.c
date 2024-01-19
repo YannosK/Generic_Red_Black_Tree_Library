@@ -746,6 +746,9 @@ unsigned int rbt_create(void)
 
 unsigned int rbt_destroy(unsigned int tree_id)
 {
+    // WON'T ALLOW ME TO TOUCH THE HEAD AND TAIL
+    assert(head_rbt_list != NULL && tail_rbt_list != NULL);
+
     handler tree = tree_find(tree_id);
     handler aux_back, aux_next;
 
@@ -759,9 +762,9 @@ unsigned int rbt_destroy(unsigned int tree_id)
         aux_back->n = aux_next;
         aux_next->b = aux_back;
 
-        assert(head_rbt_list != NULL && tail_rbt_list != NULL);
         assert(0);
         assert(head_rbt_list->multitude == 2);
+
         head_rbt_list->multitude = (head_rbt_list->multitude) - 1;
         tail_rbt_list->multitude = tail_rbt_list->multitude - 1;
         assert(head_rbt_list->multitude == tail_rbt_list->multitude);
