@@ -128,13 +128,14 @@ int main()
                     printf("\n\t\tThe tree is empty\n");
                     break;
                 case 5:
-                    assert(0);
                     rt = rbt_destroy(ID[usr_int]);
                     if (rt == 1)
                     {
                         printf("\n\t\tAttempted destruction of a non-empty tree\n");
                         return 3;
                     }
+                    else
+                        ID[usr_int] = NULL;
                     break;
                 default:
                     assert(0);
