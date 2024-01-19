@@ -10,6 +10,11 @@
 unsigned int rbt_create(void);
 
 /*
+    Destroys a red-black tree using its ID
+*/
+unsigned int rbt_destroy(unsigned int tree_id);
+
+/*
     Red-Black Tree Node Insertion
 
     returns 0 if the node was added succesfully

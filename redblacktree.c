@@ -744,6 +744,30 @@ unsigned int rbt_create(void)
         assert(0);
 }
 
+unsigned int rbt_destroy(unsigned int tree_id)
+{
+    handler tree = tree_find(tree_id);
+    handler aux_back, aux_next;
+
+    if (tree->root != NULL)
+        return 1;
+    else
+    {
+        aux_back = tree->b;
+        aux_next = tree->n;
+
+        aux_back->n = aux_next;
+        aux_next->b = aux_back;
+
+        head_rbt_list->multitude = head_rbt_list - 1;
+        tail_rbt_list->multitude = tail_rbt_list - 1;
+        assert(head_rbt_list == tail_rbt_list);
+
+        free(tree);
+        return 0;
+    }
+}
+
 int rbt_insert(unsigned int tree_id, unsigned int key)
 {
     handler tree;
