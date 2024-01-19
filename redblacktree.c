@@ -853,7 +853,6 @@ int rbt_delete(handler tree, unsigned int key)
                 tree->root = NULL;
                 og_color = 'r';
                 flag = 2;
-                free(d);
             }
             else
             {
@@ -895,9 +894,8 @@ int rbt_delete(handler tree, unsigned int key)
                 }
                 else
                     assert(0);
-
-                free(d);
             }
+            free(d);
         }
         else if (d->left == NULL && d->right != NULL)
         {
@@ -994,8 +992,9 @@ int rbt_delete(handler tree, unsigned int key)
             }
             else if (flag == 2)
                 return 5;
+            else
+                return 0;
         }
-        return 0;
     }
     else
         return 1;
