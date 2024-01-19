@@ -21,51 +21,16 @@ struct node_struct
     node parent;
 };
 
-/*
-    Pointer to the defining struct of each tree. The sentinel of the tree
-    It is a member of a list that contains all the trees
-
-    Contains:
-    No          : the integer ID of the tree
-    multitude   : number of all the trees, only updated on the head and the tail of the list
-    root        : pointer to the root node of the tree
-    n           : pointer to the next tree
-    b           : pointer to the previous tree
-*/
 struct sentinel
 {
-    unsigned int No;
-    unsigned int multitude;
     node root;
-    handler n;
-    handler b;
 };
-
-handler head_rbt_list = NULL;
-handler tail_rbt_list = NULL;
 
 /****************************************************************************************************************************************************************/
 /****************************************************************************************************************************************************************/
 // INTERNAL FUNCTIONS
 /****************************************************************************************************************************************************************/
 /****************************************************************************************************************************************************************/
-
-/*
-    Takes the integer ID of a tree and returns a pointer to the tree's sentinel
- */
-handler tree_find(unsigned int tree_id)
-{
-    handler instance;
-
-    instance = head_rbt_list;
-    while (instance->No != tree_id)
-    {
-        instance = instance->n;
-        assert(instance != NULL);
-    }
-
-    return instance;
-}
 
 /*
     Left Rotation on Red-Black Tree Node
@@ -673,101 +638,23 @@ int watchdog_file_logger(handler tree)
 
 handler rbt_create(void)
 {
-    if (tail_rbt_list == NULL && head_rbt_list == NULL)
-    {
-        assert(tail_rbt_list == NULL && head_rbt_list == NULL);
+    handler instance = (handler)malloc(sizeof(struct sentinel));
+    if (instance == NULL)
+        return NULL;
 
-        handler instance = (handler)malloc(sizeof(struct sentinel));
-        if (instance == NULL)
-            return NULL;
+    instance->root = NULL;
 
-        instance->n = NULL;
-        instance->b = NULL;
-        instance->multitude = 1;
-        instance->root = NULL;
-        instance->No = 1;
-
-        tail_rbt_list = instance;
-        head_rbt_list = tail_rbt_list;
-
-        assert(tail_rbt_list != NULL && head_rbt_list != NULL);
-
-        return instance;
-    }
-    else if (tail_rbt_list != NULL && head_rbt_list != NULL)
-    {
-        assert(0);
-        handler instance = (handler)malloc(sizeof(struct sentinel));
-        if (instance == NULL)
-            return NULL;
-        instance->root = NULL;
-
-        handler aux = head_rbt_list;
-        assert(aux != NULL);
-
-        while (aux->n != NULL && ((aux->n->No) - (aux->No) == 1))
-            aux = aux->n;
-
-        if (aux->n == NULL)
-        {
-            assert(aux == tail_rbt_list);
-
-            instance->n = NULL;
-            instance->b = aux;
-            aux->n = instance;
-
-            instance->multitude = tail_rbt_list->multitude + 1;
-            instance->No = aux->No + 1;
-
-            tail_rbt_list = instance;
-            head_rbt_list->multitude = tail_rbt_list->multitude;
-
-            return instance;
-        }
-        else
-        {
-            instance->n = aux->n;
-            aux->n->b = instance;
-            instance->b = aux;
-            aux->n = instance;
-
-            instance->No = aux->No + 1;
-            instance->multitude = tail_rbt_list->multitude + 1;
-
-            tail_rbt_list->multitude = instance->multitude;
-            head_rbt_list->multitude = instance->multitude;
-
-            return instance;
-        }
-    }
-    else
-        assert(0);
+    return instance;
 }
 
 unsigned int rbt_destroy(handler tree)
 {
-    // WON'T ALLOW ME TO TOUCH THE HEAD AND TAIL
-    assert(head_rbt_list != NULL && tail_rbt_list != NULL);
-
     handler aux_back, aux_next;
 
     if (tree->root != NULL)
         return 1;
     else
     {
-        aux_back = tree->b;
-        aux_next = tree->n;
-
-        aux_back->n = aux_next;
-        aux_next->b = aux_back;
-
-        assert(0);
-        assert(head_rbt_list->multitude == 2);
-
-        head_rbt_list->multitude = (head_rbt_list->multitude) - 1;
-        tail_rbt_list->multitude = tail_rbt_list->multitude - 1;
-        assert(head_rbt_list->multitude == tail_rbt_list->multitude);
-
         free(tree);
         return 0;
     }
