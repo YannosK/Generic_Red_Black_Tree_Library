@@ -671,7 +671,7 @@ int watchdog_file_logger(handler tree)
 /****************************************************************************************************************************************************************/
 /****************************************************************************************************************************************************************/
 
-unsigned int rbt_create(void)
+handler rbt_create(void)
 {
     if (tail_rbt_list == NULL && head_rbt_list == NULL)
     {
@@ -679,7 +679,7 @@ unsigned int rbt_create(void)
 
         handler instance = (handler)malloc(sizeof(struct sentinel));
         if (instance == NULL)
-            return 0;
+            return NULL;
 
         instance->n = NULL;
         instance->b = NULL;
@@ -692,14 +692,14 @@ unsigned int rbt_create(void)
 
         assert(tail_rbt_list != NULL && head_rbt_list != NULL);
 
-        return instance->No;
+        return instance;
     }
     else if (tail_rbt_list != NULL && head_rbt_list != NULL)
     {
         assert(0);
         handler instance = (handler)malloc(sizeof(struct sentinel));
         if (instance == NULL)
-            return 0;
+            return NULL;
         instance->root = NULL;
 
         handler aux = head_rbt_list;
@@ -722,7 +722,7 @@ unsigned int rbt_create(void)
             tail_rbt_list = instance;
             head_rbt_list->multitude = tail_rbt_list->multitude;
 
-            return instance->No;
+            return instance;
         }
         else
         {
@@ -737,19 +737,18 @@ unsigned int rbt_create(void)
             tail_rbt_list->multitude = instance->multitude;
             head_rbt_list->multitude = instance->multitude;
 
-            return instance->No;
+            return instance;
         }
     }
     else
         assert(0);
 }
 
-unsigned int rbt_destroy(unsigned int tree_id)
+unsigned int rbt_destroy(handler tree)
 {
     // WON'T ALLOW ME TO TOUCH THE HEAD AND TAIL
     assert(head_rbt_list != NULL && tail_rbt_list != NULL);
 
-    handler tree = tree_find(tree_id);
     handler aux_back, aux_next;
 
     if (tree->root != NULL)
@@ -774,13 +773,10 @@ unsigned int rbt_destroy(unsigned int tree_id)
     }
 }
 
-int rbt_insert(unsigned int tree_id, unsigned int key)
+int rbt_insert(handler tree, unsigned int key)
 {
-    handler tree;
     node aux1, aux2;
     int rot;
-
-    tree = tree_find(tree_id);
 
     aux2 = NULL;
     aux1 = tree->root;
@@ -822,10 +818,8 @@ int rbt_insert(unsigned int tree_id, unsigned int key)
     return 0;
 }
 
-int rbt_delete(unsigned int tree_id, unsigned int key)
+int rbt_delete(handler tree, unsigned int key)
 {
-    handler tree = tree_find(tree_id);
-
     if (tree->root == NULL)
         return 4;
 
@@ -1007,38 +1001,7 @@ int rbt_delete(unsigned int tree_id, unsigned int key)
         return 1;
 }
 
-int *rbt_show(void)
+int rbt_print(handler tree)
 {
-    if (tail_rbt_list == NULL)
-        return NULL;
-    else
-    {
-        assert(tail_rbt_list->No != 0);
-        assert(tail_rbt_list->multitude != 0);
-        assert(head_rbt_list != NULL);
-
-        int *arr = (int *)malloc((tail_rbt_list->multitude + 1) * (sizeof(unsigned int)));
-
-        handler aux = head_rbt_list;
-
-        int i = 0;
-        while (aux != NULL)
-        {
-            *(arr + i) = aux->No;
-            aux = aux->n;
-            i++;
-        }
-
-        *(arr + i + 1) = 0;
-        assert(*(arr + i + 1) == 0);
-
-        assert(i == tail_rbt_list->multitude);
-
-        return arr;
-    }
-}
-
-int rbt_print(unsigned int tree_id)
-{
-    return print_recursive(tree_find(tree_id)->root, 0);
+    return print_recursive(tree->root, 0);
 }

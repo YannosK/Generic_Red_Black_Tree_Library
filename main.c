@@ -36,7 +36,7 @@ int main()
         printf("\n\n*******************************************************************************\n");
         printf("Previous choice %c\n", usr_char);
         printf("Select what would you like to do:\n");
-        printf("q: quit\ns: show all red-black trees with their IDs\ni: insert new node\nd: delete a node\np: print a red-black Tree\n");
+        printf("q: quit\ni: insert new node\nd: delete a node\np: print a red-black Tree\n");
         printf("Your choice: ");
         scanf("%c", &usr_char);
         getchar();
@@ -57,7 +57,21 @@ int main()
             break;
         case 'i':
             printf("\n\n\tINSERT\n\n");
-            rt = rbt_insert(usr_int, usr_int2);
+
+            printf("\tEnter the tree ID: ");
+            if (1 != scanf("%d", &usr_int))
+                return 1;
+            getchar();
+
+            if (ID[usr_int] == NULL)
+                ID[usr_int] = rbt_create();
+
+            printf("\tEnter the node value: ");
+            if (1 != scanf("%d", &usr_int2))
+                return 1;
+            getchar();
+
+            rt = rbt_insert(ID[usr_int], usr_int2);
             switch (rt)
             {
             case 2:
@@ -76,39 +90,55 @@ int main()
             break;
         case 'd':
             printf("\n\n\tDELETE\n\n");
+
+            printf("\tEnter the tree ID: ");
             if (1 != scanf("%d", &usr_int))
                 return 1;
             getchar();
-            rt = rbt_delete(usr_int, usr_int2);
-            switch (rt)
+
+            if (ID[usr_int] == NULL)
             {
-            case 0:
+                printf("\n\tInvalid ID\n");
                 break;
-            case 1:
-                printf("\t\tNo node with the inserted key exists\n");
-                break;
-            case 2:
-                printf("\t\tFatal memory error\n");
-                return 3;
-                break;
-            case 3:
-                printf("\t\tFatal error code from the library redblacktree.h\n");
-                return 3;
-                break;
-            case 4:
-                printf("\t\tThe tree is empty\n");
-                break;
-            case 5:
-                // rt = rbt_destroy(usr_int);
-                // assert(0);
-                // if (rt == 1)
-                // {
-                //     printf("\n\t\tAttempted destruction of a non-empty tree\n");
-                //     return 3;
-                // }
-                break;
-            default:
-                assert(0);
+            }
+            else
+            {
+                printf("\tEnter the node value: ");
+                if (1 != scanf("%d", &usr_int2))
+                    return 1;
+                getchar();
+
+                rt = rbt_delete(ID[usr_int], usr_int2);
+                switch (rt)
+                {
+                case 0:
+                    break;
+                case 1:
+                    printf("\n\t\tNo node with the inserted key exists\n");
+                    break;
+                case 2:
+                    printf("\n\t\tFatal memory error\n");
+                    return 3;
+                    break;
+                case 3:
+                    printf("\n\t\tFatal error code from the library redblacktree.h\n");
+                    return 3;
+                    break;
+                case 4:
+                    printf("\n\t\tThe tree is empty\n");
+                    break;
+                case 5:
+                    rt = rbt_destroy(ID[usr_int]);
+                    if (rt == 1)
+                    {
+                        printf("\n\t\tAttempted destruction of a non-empty tree\n");
+                        return 3;
+                    }
+                    break;
+                default:
+                    assert(0);
+                    break;
+                }
                 break;
             }
         case 'p':
@@ -118,10 +148,18 @@ int main()
                 return 1;
             getchar();
             printf("\n");
-            rt = rbt_print(usr_int);
-            if (rt == 1)
-                printf("\tThe tree is empty\n");
-            break;
+            if (ID[usr_int] == NULL)
+            {
+                printf("\n\tInavlid ID\n");
+                break;
+            }
+            else
+            {
+                rt = rbt_print(ID[usr_int]);
+                if (rt == 1)
+                    printf("\tThe tree is empty\n");
+                break;
+            }
         default:
             break;
         }
