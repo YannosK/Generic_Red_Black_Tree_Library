@@ -759,9 +759,12 @@ unsigned int rbt_destroy(unsigned int tree_id)
         aux_back->n = aux_next;
         aux_next->b = aux_back;
 
-        head_rbt_list->multitude = head_rbt_list->multitude - 1;
+        assert(head_rbt_list != NULL && tail_rbt_list != NULL);
+        assert(0);
+        assert(head_rbt_list->multitude == 2);
+        head_rbt_list->multitude = (head_rbt_list->multitude) - 1;
         tail_rbt_list->multitude = tail_rbt_list->multitude - 1;
-        assert(head_rbt_list == tail_rbt_list);
+        assert(head_rbt_list->multitude == tail_rbt_list->multitude);
 
         free(tree);
         return 0;
@@ -825,7 +828,7 @@ int rbt_delete(unsigned int tree_id, unsigned int key)
 
     node d, temp, aux, T;
     int rt;
-    int flag = 0;
+    int flag = 0; // if it ends up 1 it means a sentinel was created, if it ends up 2 it means the root was deleted
     char og_color;
 
     d = tree->root;
@@ -852,6 +855,8 @@ int rbt_delete(unsigned int tree_id, unsigned int key)
                 printf(".1\n");
                 tree->root = NULL;
                 og_color = 'r';
+                flag = 2;
+                free(d);
             }
             else
             {
@@ -893,9 +898,9 @@ int rbt_delete(unsigned int tree_id, unsigned int key)
                 }
                 else
                     assert(0);
-            }
 
-            free(d);
+                free(d);
+            }
         }
         else if (d->left == NULL && d->right != NULL)
         {
@@ -990,6 +995,8 @@ int rbt_delete(unsigned int tree_id, unsigned int key)
                 else
                     assert(0);
             }
+            else if (flag == 2)
+                return 5;
         }
         return 0;
     }

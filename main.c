@@ -72,7 +72,7 @@ int main()
             int_handle = rbt_show();
             if (int_handle == NULL)
             {
-                printf("\tNo red-black trees were ever created. A new tree with a new ID will be created. Press any number to continue or 0 to abort:\n");
+                printf("\tNo red-black trees were ever created. A new tree with a new ID will be created. Press any number to continue or 0 to abort: ");
                 if (1 != scanf("%d", &usr_int))
                     return 1;
                 getchar();
@@ -88,12 +88,20 @@ int main()
                     }
                     else
                     {
-                        printf("\t\tInsert the key of the node you want to add. 0 is not allowed. If you enter zero it will abort: ");
+                        printf("\n\t\tInsert the key of the node you want to add. 0 is not allowed. If you enter zero it will abort: ");
                         if (1 != scanf("%d", &usr_int2))
                             return 1;
                         getchar();
                         if (usr_int2 == 0)
+                        {
+                            rt = rbt_destroy(usr_int);
+                            if (rt == 1)
+                            {
+                                printf("\n\t\tAttempted destruction of a non-empty tree\n");
+                                return 3;
+                            }
                             break;
+                        }
                         else
                         {
                             rt = rbt_insert(usr_int, usr_int2);
@@ -104,7 +112,7 @@ int main()
                                 return 2;
                                 break;
                             case 1:
-                                printf("\n\t\tA node with the inserted key already exists.\n");
+                                assert(0); // the tree did not previously exist, it can't have nodes in it
                                 break;
                             case 0:
                                 break;
@@ -168,6 +176,7 @@ int main()
                                     assert(0);
                                     break;
                                 }
+                                break;
                             }
                         }
                         else if ((*(int_handle + i + 1)) == 0)
@@ -239,6 +248,15 @@ int main()
                                     break;
                                 case 4:
                                     printf("\t\tThe tree is empty\n");
+                                    break;
+                                case 5:
+                                    rt = rbt_destroy(usr_int);
+                                    assert(0);
+                                    if (rt == 1)
+                                    {
+                                        printf("\n\t\tAttempted destruction of a non-empty tree\n");
+                                        return 3;
+                                    }
                                     break;
                                 default:
                                     assert(0);

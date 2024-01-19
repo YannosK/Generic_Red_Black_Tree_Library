@@ -34,6 +34,7 @@ int rbt_insert(unsigned int tree_id, unsigned int key);
     returns 2 when heap memory allocation fails (the sentinel was not created)
     returns 3 when there is a broken pointer
     returns 4 when the tree is empty (root == NULL)
+    returns 5 if the node that was just deleted was the root - used to call rbt_destroy
 */
 int rbt_delete(unsigned int tree_id, unsigned int key);
 
