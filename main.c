@@ -4,7 +4,6 @@
 
 // #define NDEBUG
 #include <assert.h>
-// yes
 
 /*
     This main function is a scafold to test the red-black tree library
