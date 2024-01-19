@@ -64,7 +64,9 @@ int main()
             {
                 printf("\tThe available red-black trees have IDs:\n\n");
                 for (i = 0; *(int_handle + i) != 0; i++)
+                {
                     printf("\t%d\n", *(int_handle + i));
+                }
             }
             break;
         case 'i':
@@ -250,13 +252,13 @@ int main()
                                     printf("\t\tThe tree is empty\n");
                                     break;
                                 case 5:
-                                    rt = rbt_destroy(usr_int);
-                                    assert(0);
-                                    if (rt == 1)
-                                    {
-                                        printf("\n\t\tAttempted destruction of a non-empty tree\n");
-                                        return 3;
-                                    }
+                                    // rt = rbt_destroy(usr_int);
+                                    // assert(0);
+                                    // if (rt == 1)
+                                    // {
+                                    //     printf("\n\t\tAttempted destruction of a non-empty tree\n");
+                                    //     return 3;
+                                    // }
                                     break;
                                 default:
                                     assert(0);

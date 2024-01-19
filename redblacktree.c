@@ -697,6 +697,7 @@ unsigned int rbt_create(void)
     }
     else if (tail_rbt_list != NULL && head_rbt_list != NULL)
     {
+        assert(0);
         handler instance = (handler)malloc(sizeof(struct sentinel));
         if (instance == NULL)
             return 0;
@@ -1030,6 +1031,7 @@ int *rbt_show(void)
         }
 
         *(arr + i + 1) = 0;
+        assert(*(arr + i + 1) == 0);
 
         assert(i == tail_rbt_list->multitude);
 
