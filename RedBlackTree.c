@@ -694,10 +694,13 @@ unsigned int rbt_destroy(handler tree)
     }
 }
 
-void *rbt_keyfind(handler tree, void *key, int (*compare)(const void *op1, const void *op2), int (*equal)(const void *op1, const void *op2))
+void *rbt_keyfind(handler tree, void *key, int (*compare)(const void *op1, const void *op2), int (*equal)(const void *op1, const void *op2), void (*destroykey)(void *key))
 {
     if (tree == NULL)
+    {
+        destroykey(key);
         return NULL;
+    }
     else
     {
         node aux;
@@ -708,7 +711,10 @@ void *rbt_keyfind(handler tree, void *key, int (*compare)(const void *op1, const
         while (aux != NULL)
         {
             if (equal(key, aux->key))
+            {
+                destroykey(key);
                 return aux->key;
+            }
             else if (compare(key, aux->key))
                 aux = aux->right;
             else if (compare(aux->key, key))
@@ -716,7 +722,7 @@ void *rbt_keyfind(handler tree, void *key, int (*compare)(const void *op1, const
             else
                 assert(0);
         }
-
+        destroykey(key);
         return NULL;
     }
 }
@@ -773,11 +779,11 @@ int rbt_insert(handler(*tree), void *key, int (*compare)(const void *op1, const 
     return 0;
 }
 
-int rbt_delete(handler tree, unsigned int key)
+int rbt_delete(handler *tree, void *key, int (*compare)(const void *op1, const void *op2), int (*equal)(const void *op1, const void *op2), void (*destroykey)(void *key))
 {
-    watchdog_file_logger(tree);
+    watchdog_file_logger((*tree));
 
-    if (tree->root == NULL)
+    if ((*tree)->root == NULL)
         return 4;
 
     node d, temp, aux, T;
@@ -785,13 +791,12 @@ int rbt_delete(handler tree, unsigned int key)
     int flag = 0; // if it ends up 1 it means a sentinel was created, if it ends up 2 it means the root was deleted
     char og_color;
 
-    d = tree->root;
-
+    d = (*tree)->root;
     while (d != NULL)
     {
-        if (key < d->key)
+        if (compare(d->key, key))
             d = d->left;
-        else if (key > d->key)
+        else if (compare(key, d->key))
             d = d->right;
         else
             break;
@@ -807,7 +812,7 @@ int rbt_delete(handler tree, unsigned int key)
             if (d->parent == NULL)
             {
                 printf(".1\n");
-                tree->root = NULL;
+                (*tree)->root = NULL;
                 og_color = 'r';
                 flag = 2;
             }
@@ -852,20 +857,23 @@ int rbt_delete(handler tree, unsigned int key)
                 else
                     assert(0);
             }
+            destroykey(key);
             free(d);
         }
         else if (d->left == NULL && d->right != NULL)
         {
             printf("\t\tCASE 2\n");
             temp = d->right;
-            delete_transplant(&tree, &d, &temp);
+            delete_transplant(tree, &d, &temp);
+            destroykey(key);
             free(d);
         }
         else if (d->right == NULL && d->left != NULL)
         {
             printf("\t\tCASE 3\n");
             temp = d->left;
-            delete_transplant(&tree, &d, &temp);
+            delete_transplant(tree, &d, &temp);
+            destroykey(key);
             free(d);
         }
         else if (d->left != NULL && d->right != NULL)
@@ -899,12 +907,12 @@ int rbt_delete(handler tree, unsigned int key)
                 T->parent = temp;
             }
 
-            delete_transplant(&tree, &temp, &aux);
+            delete_transplant(tree, &temp, &aux);
             temp->right = d->right;
             temp->right->parent = temp;
             assert(temp->left == NULL);
 
-            delete_transplant(&tree, &d, &temp);
+            delete_transplant(tree, &d, &temp);
             temp->left = d->left;
             assert(temp->left != NULL);
             temp->left->parent = temp;
@@ -912,6 +920,7 @@ int rbt_delete(handler tree, unsigned int key)
 
             temp = aux;
 
+            destroykey(key);
             free(d);
         }
         else
@@ -919,8 +928,8 @@ int rbt_delete(handler tree, unsigned int key)
 
         if (og_color == 'b')
         {
-            rt = delete_fixup(&tree, &temp);
-            watchdog_file_logger(tree);
+            rt = delete_fixup(tree, &temp);
+            watchdog_file_logger((*tree));
             if (rt == 0)
                 return 0;
             else if (rt == 1)
@@ -944,7 +953,7 @@ int rbt_delete(handler tree, unsigned int key)
                     free(T);
                     printf("\t\tSentinel is killed by rbt_delete\n");
 
-                    watchdog_file_logger(tree);
+                    watchdog_file_logger((*tree));
                     return 0;
                 }
                 else
@@ -954,7 +963,7 @@ int rbt_delete(handler tree, unsigned int key)
                 return 5;
             else
             {
-                watchdog_file_logger(tree);
+                watchdog_file_logger((*tree));
                 return 0;
             }
         }

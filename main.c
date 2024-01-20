@@ -19,6 +19,7 @@ int main()
 {
     char usr_char;
     int usr_int, usr_int2, rt, i;
+    void *key;
 
     /*
         ID is an array with the handlers of all created RBTs
@@ -109,7 +110,8 @@ int main()
                     return 1;
                 getchar();
 
-                rt = rbt_delete(ID[usr_int], usr_int2);
+                key = rbt_keyfind(ID[usr_int], int_createkey(usr_int2), int_compare, int_equal, int_destroykey);
+                rt = rbt_delete((ID + usr_int), key, int_compare, int_equal, int_destroykey);
                 switch (rt)
                 {
                 case 0:

@@ -24,20 +24,23 @@ handler rbt_create(void);
 unsigned int rbt_destroy(handler tree);
 
 /*
-    A function where a key is inputed and it finds a node that has such a key
+    A function where a key is inputed and it finds a node that has such a keyv
+    It uses a temporary key to find the key we want to delete
+    It is responsible to free the memory of the temporary key
+
 
     Arguments:
     tree    : a pointer to the sentinel struct of the tree
     key     : a (void) pointer to the struct that holds a key.
-            WARNING: this is a temporary key that has to be destroyed and it is only used to find a similar tree in the rbt
     compare : a pointer to a function that compares keys to see if key1 > key2, taking pointers to their structs as inputs
     equal   : a pointer to a function that compares keys to see if they are equal, taking pointers to their structs as inputs
+    destroykey  : a pointer to a function that destroys the container of the inserted key, to avoid memory leaks
 
     Returns:
     NULL if no equal key was found
     the pointer to the key struct it found
 */
-void *rbt_keyfind(handler tree, void *key, int (*compare)(const void *op1, const void *op2), int (*equal)(const void *op1, const void *op2));
+void *rbt_keyfind(handler tree, void *key, int (*compare)(const void *op1, const void *op2), int (*equal)(const void *op1, const void *op2), void (*destroykey)(void *key));
 
 /*
     Red-Black Tree Node Insertion
@@ -45,7 +48,7 @@ void *rbt_keyfind(handler tree, void *key, int (*compare)(const void *op1, const
 
     Arguments:
     tree        : a pointer to the sentinel struct of the tree
-    key         : a (void) pointer to the struct that holds the key
+    key         : a (void) pointer to the struct that holds the key that we want inserted in the new node
     compare     : a pointer to a function that compares keys to see if key1 > key2, taking pointers to their structs as inputs
     equal       : a pointer to a function that compares keys to see if they are equal, taking pointers to their structs as inputs
     destroykey  : a pointer to a function that destroys the container of the inserted key, to avoid memory leaks
@@ -59,15 +62,25 @@ int rbt_insert(handler *tree, void *key, int (*compare)(const void *op1, const v
 
 /*
     Red-Black Tree Node Deletion
+    In order to find the proper key of the node to delete, insert a temporary key with equal value with the key you wish to delete in the second argument
+    It is responsible to free the memory soon-to-be-deleted node's key struct
 
-    returns 0 if the node was deleted succesfully
-    returns 1 when the node does not exist
-    returns 2 when heap memory allocation fails (the sentinel was not created)
-    returns 3 when there is a broken pointer
-    returns 4 when the tree is empty (root == NULL)
-    returns 5 if the node that was just deleted was the root - used to call rbt_destroy
+    Arguments:
+    tree        : a pointer to the sentinel struct of the tree
+    temp_key    : a (void) pointer to the struct that holds a temporary key, in order to find the actual key of the node we wish to delete
+    compare     : a pointer to a function that compares keys to see if key1 > key2, taking pointers to their structs as inputs
+    equal       : a pointer to a function that compares keys to see if they are equal, taking pointers to their structs as inputs
+    destroykey  : a pointer to a function that destroys the container of the inserted key, to avoid memory leaks
+
+    Returns:
+    0 if the node was deleted succesfully
+    1 when the node does not exist
+    2 when heap memory allocation fails (the sentinel was not created)
+    3 when there is a broken pointer
+    4 when the tree is empty (root == NULL)
+    5 if the node that was just deleted was the root - used to call rbt_destroy
 */
-int rbt_delete(handler tree, unsigned int key);
+int rbt_delete(handler *tree, void *key, int (*compare)(const void *op1, const void *op2), int (*equal)(const void *op1, const void *op2), void (*destroykey)(void *key));
 
 /*
     Prints the entire Red-Black Tree
