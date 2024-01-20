@@ -444,7 +444,6 @@ int print_recursive(node x, int level, void (*keyprinter)(const void *key))
             printf("Parent: NULL\n");
         else
         {
-            printf("Parent: %d\n", x->parent->key);
             printf("Parent: ");
             keyprinter(x->parent->key);
             printf("\n");
@@ -722,7 +721,7 @@ void *rbt_keyfind(handler tree, void *key, int (*compare)(const void *op1, const
     }
 }
 
-int rbt_insert(handler(*tree), const void *key, int (*compare)(const void *op1, const void *op2), int (*equal)(const void *op1, const void *op2))
+int rbt_insert(handler(*tree), void *key, int (*compare)(const void *op1, const void *op2), int (*equal)(const void *op1, const void *op2))
 {
     if ((*tree)->root != NULL)
         watchdog_file_logger((*tree));

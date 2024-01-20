@@ -53,7 +53,7 @@ void *rbt_keyfind(handler tree, void *key, int (*compare)(const void *op1, const
     1 when the node already exists
     2 when there is no memory left on heap
 */
-int rbt_insert(handler *tree, const void *key, int (*compare)(const void *op1, const void *op2), int (*equal)(const void *op1, const void *op2));
+int rbt_insert(handler *tree, void *key, int (*compare)(const void *op1, const void *op2), int (*equal)(const void *op1, const void *op2));
 
 /*
     Red-Black Tree Node Deletion
