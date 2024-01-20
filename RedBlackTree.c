@@ -34,6 +34,18 @@ struct sentinel
 
 int generic_int_test(void *key, size_t size, int (*compare)(const void *op1, const void *op2))
 {
+    struct operands
+    {
+        void *op1;
+        void *op2;
+    };
+
+    struct operands op;
+
+    op.op1 = key;
+    op.op2 = key;
+
+    return compare(op.op1, op.op2);
 }
 
 /****************************************************************************************************************************************************************/
