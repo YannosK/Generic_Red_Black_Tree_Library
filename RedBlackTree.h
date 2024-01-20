@@ -41,19 +41,21 @@ void *rbt_keyfind(handler tree, void *key, int (*compare)(const void *op1, const
 
 /*
     Red-Black Tree Node Insertion
+    If the insertion fails it is responsible to free the memory allocated to the inserted key
 
     Arguments:
-    tree    : a pointer to the sentinel struct of the tree
-    key     : a (void) pointer to the struct that holds the key
-    compare : a pointer to a function that compares keys to see if key1 > key2, taking pointers to their structs as inputs
-    equal   : a pointer to a function that compares keys to see if they are equal, taking pointers to their structs as inputs
+    tree        : a pointer to the sentinel struct of the tree
+    key         : a (void) pointer to the struct that holds the key
+    compare     : a pointer to a function that compares keys to see if key1 > key2, taking pointers to their structs as inputs
+    equal       : a pointer to a function that compares keys to see if they are equal, taking pointers to their structs as inputs
+    destroykey  : a pointer to a function that destroys the container of the inserted key, to avoid memory leaks
 
     Returns:
     0 if the node was added succesfully
     1 when the node already exists
     2 when there is no memory left on heap
 */
-int rbt_insert(handler *tree, void *key, int (*compare)(const void *op1, const void *op2), int (*equal)(const void *op1, const void *op2));
+int rbt_insert(handler *tree, void *key, int (*compare)(const void *op1, const void *op2), int (*equal)(const void *op1, const void *op2), void (*destroykey)(void *key));
 
 /*
     Red-Black Tree Node Deletion

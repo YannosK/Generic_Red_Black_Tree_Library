@@ -7,6 +7,8 @@
 */
 void *int_createkey(int input_key);
 
+void int_destroykey(void *key);
+
 /*
     Returns the size of the integer key struct (basically the size of int key)
 */

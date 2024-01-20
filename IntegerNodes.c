@@ -25,6 +25,12 @@ void *int_createkey(int input_key)
     return (void *)key;
 }
 
+void int_destroykey(void *key)
+{
+    intKey dead = (intKey)key;
+    free(key);
+}
+
 size_t int_size(void)
 {
     size_t intKeySize = sizeof(struct intStruct);

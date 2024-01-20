@@ -721,7 +721,7 @@ void *rbt_keyfind(handler tree, void *key, int (*compare)(const void *op1, const
     }
 }
 
-int rbt_insert(handler(*tree), void *key, int (*compare)(const void *op1, const void *op2), int (*equal)(const void *op1, const void *op2))
+int rbt_insert(handler(*tree), void *key, int (*compare)(const void *op1, const void *op2), int (*equal)(const void *op1, const void *op2), void (*destroykey)(void *key))
 {
     if ((*tree)->root != NULL)
         watchdog_file_logger((*tree));
@@ -739,7 +739,10 @@ int rbt_insert(handler(*tree), void *key, int (*compare)(const void *op1, const 
         else if (compare(key, aux1->key))
             aux1 = aux1->right;
         else if (equal(key, aux1->key))
+        {
+            destroykey(key);
             return 1;
+        }
         else
             assert(0);
     }

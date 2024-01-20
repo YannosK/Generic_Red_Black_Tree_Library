@@ -72,7 +72,7 @@ int main()
                 return 1;
             getchar();
 
-            rt = rbt_insert((ID + usr_int), int_createkey(usr_int2), int_compare, int_equal);
+            rt = rbt_insert((ID + usr_int), int_createkey(usr_int2), int_compare, int_equal, int_destroykey);
             switch (rt)
             {
             case 2:
