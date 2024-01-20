@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "redblacktree.h"
+#include "RedBlackTree.h"
+#include "IntegerNodes.h"
 
 // #define NDEBUG
 #include <assert.h>
