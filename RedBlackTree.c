@@ -14,7 +14,7 @@
 typedef struct node_struct *node;
 struct node_struct
 {
-    unsigned int key;
+    void *key;
     char color; // 'b' is black and 'r' is red
     node left;
     node right;
@@ -32,21 +32,21 @@ struct sentinel
 /****************************************************************************************************************************************************************/
 /****************************************************************************************************************************************************************/
 
-int generic_int_test(void *key, size_t size, int (*compare)(const void *op1, const void *op2))
-{
-    struct operands
-    {
-        void *op1;
-        void *op2;
-    };
+// int generic_int_test(void *key, size_t size, int (*compare)(const void *op1, const void *op2))
+// {
+//     struct operands
+//     {
+//         void *op1;
+//         void *op2;
+//     };
 
-    struct operands op;
+//     struct operands op;
 
-    op.op1 = key;
-    op.op2 = key;
+//     op.op1 = key;
+//     op.op2 = key;
 
-    return compare(op.op1, op.op2);
-}
+//     return compare(op.op1, op.op2);
+// }
 
 /****************************************************************************************************************************************************************/
 /****************************************************************************************************************************************************************/
@@ -419,7 +419,7 @@ int delete_fixup(handler *tree, node *x)
     returns 0 if executed correctlywatchdog_rbt_selfcheck
     returns 1 if we input a NULL node with no subtree
 */
-int print_recursive(node x, int level)
+int print_recursive(node x, int level, void (*keyprinter)(const void *key))
 {
     if (x == NULL)
         return 1;
@@ -427,12 +427,14 @@ int print_recursive(node x, int level)
     {
         level++;
         if (x->left != NULL)
-            print_recursive(x->left, level);
+            print_recursive(x->left, level, keyprinter);
 
         int i;
         for (i = 0; i < level; i++)
             printf("\t");
-        printf("Key: %d\n", x->key);
+        printf("Key: ");
+        keyprinter(x->key);
+        printf("\n");
         for (i = 0; i < level; i++)
             printf("\t");
         printf("Color: %c\n", x->color);
@@ -441,22 +443,34 @@ int print_recursive(node x, int level)
         if (x->parent == NULL)
             printf("Parent: NULL\n");
         else
+        {
             printf("Parent: %d\n", x->parent->key);
+            printf("Parent: ");
+            keyprinter(x->parent->key);
+            printf("\n");
+        }
         for (i = 0; i < level; i++)
             printf("\t");
         if (x->right == NULL)
             printf("Right: NULL\n");
         else
-            printf("Right: %d\n", x->right->key);
+        {
+            printf("Right: ");
+            keyprinter(x->right->key);
+            printf("\n");
+        }
         for (i = 0; i < level; i++)
             printf("\t");
         if (x->left == NULL)
             printf("Left: NULL\n");
         else
-            printf("Left: %d\n", x->left->key);
-
+        {
+            printf("Left: ");
+            keyprinter(x->left->key);
+            printf("\n");
+        }
         if (x->right != NULL)
-            print_recursive(x->right, level);
+            print_recursive(x->right, level, keyprinter);
 
         return 0;
     }
@@ -681,24 +695,51 @@ unsigned int rbt_destroy(handler tree)
     }
 }
 
-int rbt_insert(handler tree, unsigned int key)
+void *rbt_keyfind(handler tree, void *key, int (*compare)(const void *op1, const void *op2), int (*equal)(const void *op1, const void *op2))
 {
-    if (tree->root != NULL)
-        watchdog_file_logger(tree);
+    if (tree == NULL)
+        return NULL;
+    else
+    {
+        node aux;
+
+        aux = tree->root;
+        assert(aux->key != NULL);
+
+        while (aux != NULL)
+        {
+            if (equal(key, aux->key))
+                return aux->key;
+            else if (compare(key, aux->key))
+                aux = aux->right;
+            else if (compare(aux->key, key))
+                aux = aux->left;
+            else
+                assert(0);
+        }
+
+        return NULL;
+    }
+}
+
+int rbt_insert(handler(*tree), const void *key, int (*compare)(const void *op1, const void *op2), int (*equal)(const void *op1, const void *op2))
+{
+    if ((*tree)->root != NULL)
+        watchdog_file_logger((*tree));
 
     node aux1, aux2;
     int rot;
 
     aux2 = NULL;
-    aux1 = tree->root;
+    aux1 = (*tree)->root;
     while (aux1 != NULL)
     {
         aux2 = aux1;
-        if (key < aux1->key)
+        if (compare(aux1->key, key))
             aux1 = aux1->left;
-        else if (key > aux1->key)
+        else if (compare(key, aux1->key))
             aux1 = aux1->right;
-        else if (key == aux1->key)
+        else if (equal(key, aux1->key))
             return 1;
         else
             assert(0);
@@ -714,19 +755,19 @@ int rbt_insert(handler tree, unsigned int key)
     new->right = NULL;
 
     if (aux2 == NULL)
-        tree->root = new;
-    else if (key < aux2->key)
+        (*tree)->root = new;
+    else if (compare(aux2->key, key))
         aux2->left = new;
-    else if (key > aux2->key)
+    else if (compare(key, aux2->key))
         aux2->right = new;
     else
         assert(0);
 
-    rot = insert_fixup(&tree, &new);
+    rot = insert_fixup(tree, &new);
     if (rot != 0)
         printf("\t%d rotations performed during fixup\n", rot);
 
-    watchdog_file_logger(tree);
+    watchdog_file_logger((*tree));
     return 0;
 }
 
@@ -920,7 +961,7 @@ int rbt_delete(handler tree, unsigned int key)
         return 1;
 }
 
-int rbt_print(handler tree)
+int rbt_print(handler tree, void (*keyprinter)(const void *key))
 {
-    return print_recursive(tree->root, 0);
+    return print_recursive(tree->root, 0, keyprinter);
 }

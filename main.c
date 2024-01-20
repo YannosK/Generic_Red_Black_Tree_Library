@@ -72,7 +72,7 @@ int main()
                 return 1;
             getchar();
 
-            rt = rbt_insert(ID[usr_int], usr_int2);
+            rt = rbt_insert(ID[usr_int], int_createkey(usr_int2), int_compare, int_equal);
             switch (rt)
             {
             case 2:
@@ -158,17 +158,17 @@ int main()
             }
             else
             {
-                rt = rbt_print(ID[usr_int]);
+                rt = rbt_print(ID[usr_int], int_print);
                 if (rt == 1)
                     printf("\tThe tree is empty\n");
                 break;
             }
-        case 't':
-            if (generic_int_test(int_createkey(5), int_size(), int_compare) == 0)
-                printf("\n\n\tGREAT SUCCESS!!\n\n");
-            else
-                printf("\n\n\tYOU SUCK!!\n\n");
-            break;
+        // case 't':
+        //     if (generic_int_test(int_createkey(5), int_size(), int_compare) == 0)
+        //         printf("\n\n\tGREAT SUCCESS!!\n\n");
+        //     else
+        //         printf("\n\n\tYOU SUCK!!\n\n");
+        //     break;
         default:
             break;
         }
