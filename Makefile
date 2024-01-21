@@ -3,6 +3,9 @@
 # Set the executable name
 EXECUTABLE := executable
 
+# Compiler flags
+CFLAGS := -g -Wall -Wextra
+
 # Set the compiler
 CC := gcc
 
