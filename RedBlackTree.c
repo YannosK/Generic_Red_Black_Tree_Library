@@ -783,6 +783,8 @@ int rbt_delete(handler *tree, void *key, int (*compare)(const void *op1, const v
 {
     watchdog_file_logger((*tree));
 
+    assert(key != NULL);
+
     if ((*tree)->root == NULL)
         return 4;
 

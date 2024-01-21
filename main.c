@@ -38,7 +38,7 @@ int main()
         printf("\n\n*******************************************************************************\n");
         printf("Previous choice %c\n", usr_char);
         printf("Select what would you like to do:\n");
-        printf("q: quit\ni: insert new node\nd: delete a node\np: print a red-black Tree\nt: test\n");
+        printf("q: quit\ni: insert new node\nd: delete a node\np: print a red-black Tree\n");
         printf("Your choice: ");
         scanf("%c", &usr_char);
         getchar();
@@ -111,40 +111,49 @@ int main()
                 getchar();
 
                 key = rbt_keyfind(ID[usr_int], int_createkey(usr_int2), int_compare, int_equal, int_destroykey);
-                rt = rbt_delete((ID + usr_int), key, int_compare, int_equal, int_destroykey);
-                switch (rt)
+                if (key == NULL)
                 {
-                case 0:
-                    break;
-                case 1:
+
                     printf("\n\t\tNo node with the inserted key exists\n");
                     break;
-                case 2:
-                    printf("\n\t\tFatal memory error\n");
-                    return 3;
-                    break;
-                case 3:
-                    printf("\n\t\tFatal error code from the library redblacktree.h\n");
-                    return 3;
-                    break;
-                case 4:
-                    printf("\n\t\tThe tree is empty\n");
-                    break;
-                case 5:
-                    rt = rbt_destroy(ID[usr_int]);
-                    if (rt == 1)
+                }
+                else
+                {
+                    rt = rbt_delete((ID + usr_int), key, int_compare, int_equal, int_destroykey);
+                    switch (rt)
                     {
-                        printf("\n\t\tAttempted destruction of a non-empty tree\n");
+                    case 0:
+                        break;
+                    case 1:
+                        assert(0); // it is dealt with above so it should not be needed
+                        break;
+                    case 2:
+                        printf("\n\t\tFatal memory error\n");
                         return 3;
+                        break;
+                    case 3:
+                        printf("\n\t\tFatal error code from the library redblacktree.h\n");
+                        return 3;
+                        break;
+                    case 4:
+                        printf("\n\t\tThe tree is empty\n");
+                        break;
+                    case 5:
+                        rt = rbt_destroy(ID[usr_int]);
+                        if (rt == 1)
+                        {
+                            printf("\n\t\tAttempted destruction of a non-empty tree\n");
+                            return 3;
+                        }
+                        else
+                            ID[usr_int] = NULL;
+                        break;
+                    default:
+                        assert(0);
+                        break;
                     }
-                    else
-                        ID[usr_int] = NULL;
-                    break;
-                default:
-                    assert(0);
                     break;
                 }
-                break;
             }
         case 'p':
             printf("\n\n\tPRINT\n\n");
@@ -165,12 +174,6 @@ int main()
                     printf("\tThe tree is empty\n");
                 break;
             }
-        // case 't':
-        //     if (generic_int_test(int_createkey(5), int_size(), int_compare) == 0)
-        //         printf("\n\n\tGREAT SUCCESS!!\n\n");
-        //     else
-        //         printf("\n\n\tYOU SUCK!!\n\n");
-        //     break;
         default:
             break;
         }

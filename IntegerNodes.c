@@ -30,6 +30,8 @@ void *int_createkey(int input_key)
 
 void int_destroykey(void *key)
 {
+    assert(key != NULL);
+
     intKey dead = (intKey)key;
     free(key);
 }
@@ -42,6 +44,9 @@ size_t int_size(void)
 
 int int_compare(const void *op1, const void *op2)
 {
+    assert(op1 != NULL);
+    assert(op2 != NULL);
+
     if (((intKey)op1)->intKeyValue > ((intKey)op2)->intKeyValue)
         return 1;
     else
@@ -50,6 +55,9 @@ int int_compare(const void *op1, const void *op2)
 
 int int_equal(const void *op1, const void *op2)
 {
+    assert(op1 != NULL);
+    assert(op2 != NULL);
+
     if (((intKey)op1)->intKeyValue == ((intKey)op2)->intKeyValue)
         return 1;
     else
@@ -58,6 +66,8 @@ int int_equal(const void *op1, const void *op2)
 
 void int_print(const void *key)
 {
+    assert(key != NULL);
+
     printf("%d", ((intKey)key)->intKeyValue);
     return;
 }
