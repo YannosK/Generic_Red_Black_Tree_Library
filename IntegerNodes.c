@@ -68,6 +68,6 @@ void int_print(const void *key)
 {
     assert(key != NULL);
 
-    printf("%d", ((intKey)key)->intKeyValue);
+    printf("%d\n", ((intKey)key)->intKeyValue);
     return;
 }
