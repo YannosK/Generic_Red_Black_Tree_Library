@@ -5,7 +5,7 @@ Red black trees are mostly balanced trees, so they improve on complexity, in the
 
 <br>
 
-In this code I create a generic rbt that can create trees with nodes with integer keys, or string keys, using the same library to create them.
+In this code I create a generic rbt that can create trees with nodes with integer keys, or string keys, using the same library to operate on them.
 In the future one could possibly add more libraries to have trees with other data types as well, like, for example, double precision keys.
 
 <br>
