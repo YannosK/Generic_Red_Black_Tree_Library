@@ -2,11 +2,14 @@
 #define IntegerNodes
 
 /*
-    Creates a key of type int a returns a pointer to its struct, as a void pointer
+    Creates a key of type int and returns a pointer to its struct, as a void pointer
     Returns NULL if memory allocation fails
 */
 void *int_createkey(int input_key);
 
+/*
+    Destroys a struct that holds an int key using a (void) pointer to it
+*/
 void int_destroykey(void *key);
 
 /*
