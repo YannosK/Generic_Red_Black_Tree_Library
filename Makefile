@@ -4,7 +4,8 @@
 EXECUTABLE := executable
 
 # Compiler flags
-CFLAGS := -g -Wall -Wextra
+CFLAGS := -g 
+# CFLAGS := -g -Wall -Wextra
 
 # Set the compiler
 CC := gcc
@@ -24,12 +25,12 @@ all: $(EXECUTABLE)
 # The following creates the object files and then compiles
 # $(HEADER) is to update changes in the header files
 $(BUILD_DIR)/%.o : %.c $(HEADER)
-	$(CC) -c $< -o $@
+	$(CC) -c $< -o $@ $(CFLAGS)
 
 # The following creates the executable.
 # $(OBJ) is expanding on our list of strings that are our objects
 $(EXECUTABLE): $(OBJ)
-	$(CC) $^ -o $@
+	$(CC) $^ -o $@ $(CFLAGS)
 
 # this removes the entire build folder
 clean:
