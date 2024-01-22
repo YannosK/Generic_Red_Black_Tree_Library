@@ -96,6 +96,6 @@ int rbt_print(handler tree, void (*keyprinter)(const void *key));
 /****************************************************************************************************************************************************************/
 /****************************************************************************************************************************************************************/
 
-// int generic_int_test(void *key, size_t size, int (*compare)(const void *op1, const void *op2));
+int generic_string_test(void *key, int (*compare)(const void *op1, const void *op2));
 
 #endif

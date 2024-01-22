@@ -39,7 +39,7 @@ int main()
         printf("\n\n*******************************************************************************\n");
         printf("Previous choice %c\n", usr_char);
         printf("Select what would you like to do:\n");
-        printf("q: quit\ni: insert new node\nd: delete a node\np: print a red-black Tree\n");
+        printf("q: quit\ni: insert new node\nd: delete a node\np: print a red-black Tree\ns: test strings\n");
         printf("Your choice: ");
         scanf("%c", &usr_char);
         getchar();
@@ -175,6 +175,12 @@ int main()
                     printf("\tThe tree is empty\n");
                 break;
             }
+        case 's':
+            if (generic_string_test(string_createkey("Hello!", sizeof("Hello!")), string_equal) == 1)
+                printf("\n\n\tGreat success!!\n\n");
+            else
+                printf("\n\n\tYOU SUCK!!!\n\n");
+            break;
         default:
             break;
         }

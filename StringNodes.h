@@ -4,6 +4,10 @@
 /*
     Creates a key of type string and returns a pointer to its struct, as a void pointer
     Returns NULL if memory allocation fails
+
+    Arguments:
+    input_key   : the inputed string to be made a key
+    key_size    : the size of that string - it is needed
 */
 void *string_createkey(char *input_key, size_t key_size);
 

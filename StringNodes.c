@@ -14,7 +14,7 @@ typedef struct stringStruct *stringKey;
 struct stringStruct
 {
     char *stringKeyValue;
-    size_t stringKeySize;
+    // size_t stringKeySize;
 };
 
 /****************************************************************************************************************************************************************/
@@ -32,7 +32,7 @@ void *string_createkey(char *input_key, size_t key_size)
         return NULL;
 
     key->stringKeyValue = key_value;
-    key->stringKeySize = key_size;
+    // key->stringKeySize = key_size;
 
     return (void *)key;
 }
