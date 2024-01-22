@@ -979,8 +979,10 @@ int rbt_print(handler tree, void (*keyprinter)(const void *key))
     return print_recursive(tree->root, 0, keyprinter);
 }
 
-int generic_string_test(void *key, int (*compare)(const void *op1, const void *op2))
+int generic_string_test(void *key, int (*compare)(const void *op1, const void *op2), void (*printer)(const void *key))
 {
+    printf("\n\nEntered string: ");
+    printer(key);
     if (compare(key, key) == 0)
         return 1;
     else

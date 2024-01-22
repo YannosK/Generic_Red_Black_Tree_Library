@@ -31,7 +31,7 @@ void *string_createkey(char *input_key, size_t key_size)
     if (key == NULL)
         return NULL;
 
-    key->stringKeyValue = key_value;
+    key->stringKeyValue = strcpy(key_value, input_key);
     // key->stringKeySize = key_size;
 
     return (void *)key;

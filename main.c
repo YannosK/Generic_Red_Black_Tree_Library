@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "RedBlackTree.h"
 #include "IntegerNodes.h"
 #include "StringNodes.h"
@@ -176,7 +177,12 @@ int main()
                 break;
             }
         case 's':
-            if (generic_string_test(string_createkey("Hello!", sizeof("Hello!")), string_equal) == 1)
+            char test[32];
+            strcpy(test, "\nHello World!\n");
+            // printf("%s", test);
+            void *stringkey = string_createkey(test, 32);
+            // string_print(stringkey);
+            if (generic_string_test(string_createkey(test, sizeof(test)), string_equal, string_print) == 1)
                 printf("\n\n\tGreat success!!\n\n");
             else
                 printf("\n\n\tYOU SUCK!!!\n\n");
