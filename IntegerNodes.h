@@ -47,8 +47,8 @@ int int_equal(const void *op1, const void *op2);
     A function that prints the key to the standard output
     It takes as an argument a (void) pointer to the key struct
 
-    The format is plain, without newlines or tabs:
-    printf("%d", ...);
+    The format has a newline in the end:
+    printf("%d\n", ...);
 */
 void int_print(const void *key);
 

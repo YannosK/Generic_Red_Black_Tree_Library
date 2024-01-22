@@ -434,7 +434,6 @@ int print_recursive(node x, int level, void (*keyprinter)(const void *key))
             printf("\t");
         printf("Key: ");
         keyprinter(x->key);
-        printf("\n");
         for (i = 0; i < level; i++)
             printf("\t");
         printf("Color: %c\n", x->color);
@@ -446,7 +445,6 @@ int print_recursive(node x, int level, void (*keyprinter)(const void *key))
         {
             printf("Parent: ");
             keyprinter(x->parent->key);
-            printf("\n");
         }
         for (i = 0; i < level; i++)
             printf("\t");
@@ -456,7 +454,6 @@ int print_recursive(node x, int level, void (*keyprinter)(const void *key))
         {
             printf("Right: ");
             keyprinter(x->right->key);
-            printf("\n");
         }
         for (i = 0; i < level; i++)
             printf("\t");
@@ -466,7 +463,6 @@ int print_recursive(node x, int level, void (*keyprinter)(const void *key))
         {
             printf("Left: ");
             keyprinter(x->left->key);
-            printf("\n");
         }
         if (x->right != NULL)
             print_recursive(x->right, level, keyprinter);
