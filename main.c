@@ -178,8 +178,9 @@ int main()
             }
         case 's':
             char test[32];
-            strcpy(test, "\nHello World!\n");
-            // printf("%s", test);
+            strcpy(test, "Hello World!");
+            printf("Insert test: ");
+            fgets(test, sizeof(test), stdin);
             void *stringkey = string_createkey(test, 32);
             // string_print(stringkey);
             if (generic_string_test(string_createkey(test, sizeof(test)), string_equal, string_print) == 1)
