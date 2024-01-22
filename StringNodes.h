@@ -9,6 +9,8 @@ void *string_createkey(char *input_key, size_t key_size);
 
 /*
     Destroys a struct that holds an string key using a (void) pointer to it
+
+    It frees both the memory of the key container struct and also the memoery allocated for the string value
 */
 void string_destroykey(void *key);
 
