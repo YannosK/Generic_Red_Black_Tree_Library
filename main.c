@@ -302,7 +302,7 @@ int main()
         case 'p':
             printf("\n\n\tPRINT\n\n");
 
-            printf("\t You can prinbt trees with integers or strings\n\tPress i for interger and s for string, or q to abort: ");
+            printf("\tYou can print trees with integers or strings\n\tPress i for interger and s for string, or q to abort: ");
             scanf("%c", &usr_char2);
             getchar();
 
@@ -324,7 +324,7 @@ int main()
 
                 if (int_ID[usr_int] == NULL)
                 {
-                    printf("\n\tInavlid ID\n");
+                    printf("\tInavlid ID\n");
                 }
                 else
                 {
@@ -349,7 +349,7 @@ int main()
 
                 if (string_ID[usr_int] == NULL)
                 {
-                    printf("\n\tInavlid ID\n");
+                    printf("\tInavlid ID\n");
                 }
                 else
                 {
