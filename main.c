@@ -41,10 +41,10 @@ int main()
     {
         fflush(stdin);
 
-        printf("\n\n*******************************************************************************\n");
+        printf("\n\n****************************************************************************************\n");
         printf("Previous choice %c\n", usr_char);
         printf("Select what would you like to do:\n");
-        printf("q: quit\ni: insert new node\nd: delete a node\np: print a red-black Tree\ns: test strings\n");
+        printf("q: quit\ni: insert new node\nd: delete a node\np: print a red-black Tree\ns: print all trees\n");
         printf("Your choice: ");
         scanf("%c", &usr_char);
         getchar();
@@ -359,6 +359,33 @@ int main()
                 break;
             default:
                 break;
+            }
+            break;
+        case 's':
+            printf("\n\n---------------------------------------------------------------------------------------\n");
+            printf("---------------------------------------------------------------------------------------\n");
+            printf("\n\n\tINTEGER TREES\n\n");
+            for (i = 0; i < 10; i++)
+            {
+                if (int_ID[i] != NULL)
+                {
+                    printf("\n---------------------------------------------------------------------------------------\n");
+                    printf("Integer Tree ID: %d\n\n\n", i);
+                    rt = rbt_print(int_ID[usr_int], int_print);
+                }
+            }
+
+            printf("\n\n---------------------------------------------------------------------------------------\n");
+            printf("---------------------------------------------------------------------------------------\n");
+            printf("\n\n\tSTRING TREES\n\n");
+            for (i = 0; i < 10; i++)
+            {
+                if (string_ID[i] != NULL)
+                {
+                    printf("\n---------------------------------------------------------------------------------------\n");
+                    printf("String Tree ID: %d\n\n\n", i);
+                    rt = rbt_print(string_ID[usr_int], string_print);
+                }
             }
             break;
         default:
