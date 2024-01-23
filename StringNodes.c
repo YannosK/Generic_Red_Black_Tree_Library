@@ -64,7 +64,7 @@ int string_compare(const void *op1, const void *op2)
     char *s1 = str1->stringKeyValue;
     char *s2 = str2->stringKeyValue;
 
-    if (strcmp(s1, s2) < 0)
+    if (strcmp(s1, s2) > 0)
         return 1;
     else
         return 0;
