@@ -13,9 +13,8 @@
     It implements a terminal menu for a user to use the library functions
 
     returns 0 when the user selects to quit
-    returns 1 is scanf reads wrong user input
-    returns 2 if dynamic memory allocation in the heap fails
-    rerurns 3 if something else goes wrong
+    returns 1 if dynamic memory allocation in the heap fails
+    rerurns 2 if something else goes wrong
 */
 int main()
 {
@@ -76,7 +75,7 @@ int main()
             case 'i':
                 printf("\tEnter the tree ID: ");
                 if (1 != scanf("%d", &usr_int))
-                    return 1;
+                    break;
                 getchar();
 
                 if (usr_int > 9)
@@ -91,19 +90,19 @@ int main()
 
                 printf("\tEnter the node value: ");
                 if (1 != scanf("%d", &usr_int2))
-                    return 1;
+                    break;
                 getchar();
 
                 key = int_createkey(usr_int2);
                 if (key == NULL)
-                    return 2;
+                    return 1;
 
                 rt = rbt_insert((int_ID + usr_int), key, int_compare, int_equal, int_destroykey);
                 switch (rt)
                 {
                 case 2:
                     printf("\n\t\tFATAL ERROR: You have no memory (heap allocation failed) and the program will terminate\n");
-                    return 2;
+                    return 1;
                     break;
                 case 1:
                     printf("\n\t\tA node with the inserted key already exists.\n");
@@ -118,7 +117,7 @@ int main()
             case 's':
                 printf("\tEnter the tree ID: ");
                 if (1 != scanf("%d", &usr_int))
-                    return 1;
+                    break;
                 getchar();
 
                 if (usr_int > 9)
@@ -133,18 +132,18 @@ int main()
 
                 printf("\tEnter the node value: ");
                 if (fgets(usr_string, sizeof(usr_string), stdin) == NULL)
-                    return 1;
+                    break;
 
                 key = string_createkey(usr_string, sizeof(usr_string));
                 if (key == NULL)
-                    return 2;
+                    return 1;
 
                 rt = rbt_insert((string_ID + usr_int), key, string_compare, string_equal, string_destroykey);
                 switch (rt)
                 {
                 case 2:
                     printf("\n\t\tFATAL ERROR: You have no memory (heap allocation failed) and the program will terminate\n");
-                    return 2;
+                    return 1;
                     break;
                 case 1:
                     printf("\n\t\tA node with the inserted key already exists.\n");
@@ -173,7 +172,7 @@ int main()
             case 'i':
                 printf("\tEnter the tree ID: ");
                 if (1 != scanf("%d", &usr_int))
-                    return 1;
+                    break;
                 getchar();
 
                 if (usr_int > 9)
@@ -189,7 +188,7 @@ int main()
                 {
                     printf("\tEnter the node value: ");
                     if (1 != scanf("%d", &usr_int2))
-                        return 1;
+                        break;
                     getchar();
 
                     key = rbt_keyfind(int_ID[usr_int], int_createkey(usr_int2), int_compare, int_equal, int_destroykey);
@@ -207,11 +206,11 @@ int main()
                             break;
                         case 2:
                             printf("\n\t\tFatal memory error\n");
-                            return 3;
+                            return 2;
                             break;
                         case 3:
                             printf("\n\t\tFatal error code from the library redblacktree.h\n");
-                            return 3;
+                            return 2;
                             break;
                         case 4:
                             printf("\n\t\tThe tree is empty\n");
@@ -221,7 +220,7 @@ int main()
                             if (rt == 1)
                             {
                                 printf("\n\t\tAttempted destruction of a non-empty tree\n");
-                                return 3;
+                                return 2;
                             }
                             else
                                 int_ID[usr_int] = NULL;
@@ -236,7 +235,7 @@ int main()
             case 's':
                 printf("\tEnter the tree ID: ");
                 if (1 != scanf("%d", &usr_int))
-                    return 1;
+                    break;
                 getchar();
 
                 if (usr_int > 9)
@@ -252,7 +251,7 @@ int main()
                 {
                     printf("\tEnter the node value: ");
                     if (fgets(usr_string, sizeof(usr_string), stdin) == NULL)
-                        return 1;
+                        break;
 
                     key = rbt_keyfind(string_ID[usr_int], string_createkey(usr_string, sizeof(usr_string)), string_compare, string_equal, string_destroykey);
                     if (key == NULL)
@@ -269,11 +268,11 @@ int main()
                             break;
                         case 2:
                             printf("\n\t\tFatal memory error\n");
-                            return 3;
+                            return 2;
                             break;
                         case 3:
                             printf("\n\t\tFatal error code from the library redblacktree.h\n");
-                            return 3;
+                            return 2;
                             break;
                         case 4:
                             printf("\n\t\tThe tree is empty\n");
@@ -283,7 +282,7 @@ int main()
                             if (rt == 1)
                             {
                                 printf("\n\t\tAttempted destruction of a non-empty tree\n");
-                                return 3;
+                                return 2;
                             }
                             else
                                 string_ID[usr_int] = NULL;
@@ -311,7 +310,7 @@ int main()
             case 'i':
                 printf("\n\tPlease enter the ID of the tree you would like to print: ");
                 if (1 != scanf("%d", &usr_int))
-                    return 1;
+                    break;
                 getchar();
                 printf("\n");
 
@@ -336,7 +335,7 @@ int main()
             case 's':
                 printf("\n\tPlease enter the ID of the tree you would like to print: ");
                 if (1 != scanf("%d", &usr_int))
-                    return 1;
+                    break;
                 getchar();
                 printf("\n");
 
