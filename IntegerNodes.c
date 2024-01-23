@@ -36,12 +36,6 @@ void int_destroykey(void *key)
     free(key);
 }
 
-size_t int_size(void)
-{
-    size_t intKeySize = sizeof(struct intStruct);
-    return intKeySize;
-}
-
 int int_compare(const void *op1, const void *op2)
 {
     assert(op1 != NULL);

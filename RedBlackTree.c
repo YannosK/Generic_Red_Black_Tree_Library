@@ -28,28 +28,6 @@ struct sentinel
 
 /****************************************************************************************************************************************************************/
 /****************************************************************************************************************************************************************/
-// TEMPORAL GENERICITY TEST FUNCTIONS
-/****************************************************************************************************************************************************************/
-/****************************************************************************************************************************************************************/
-
-// int generic_int_test(void *key, size_t size, int (*compare)(const void *op1, const void *op2))
-// {
-//     struct operands
-//     {
-//         void *op1;
-//         void *op2;
-//     };
-
-//     struct operands op;
-
-//     op.op1 = key;
-//     op.op2 = key;
-
-//     return compare(op.op1, op.op2);
-// }
-
-/****************************************************************************************************************************************************************/
-/****************************************************************************************************************************************************************/
 // INTERNAL FUNCTIONS
 /****************************************************************************************************************************************************************/
 /****************************************************************************************************************************************************************/
@@ -141,7 +119,6 @@ int insert_fixup(handler *tree, node *x)
         assert((*x)->parent->parent->color == 'b');
 
         cnt++;
-        printf("\tFixup Loop Call: %d\n", cnt);
 
         if ((*x)->parent == (*x)->parent->parent->left)
         {
@@ -149,7 +126,6 @@ int insert_fixup(handler *tree, node *x)
 
             if (uncle != NULL && uncle->color == 'r')
             {
-                printf("\t\tCASE 1\n");
                 (*x)->parent->color = 'b';
                 uncle->color = 'b';
                 (*x)->parent->parent->color = 'r';
@@ -159,12 +135,10 @@ int insert_fixup(handler *tree, node *x)
             {
                 if ((*x) == (*x)->parent->right)
                 {
-                    printf("\t\tCASE 2\n");
                     (*x) = (*x)->parent;
                     rl = rotate_left(tree, x) + rl;
                 }
                 assert((*x)->parent->parent != NULL);
-                printf("\t\tCASE 3\n");
                 (*x)->parent->color = 'b';
                 (*x)->parent->parent->color = 'r';
                 aux = (*x)->parent->parent;
@@ -177,7 +151,6 @@ int insert_fixup(handler *tree, node *x)
 
             if (uncle != NULL && uncle->color == 'r')
             {
-                printf("\t\tCASE 1\n");
                 (*x)->parent->color = 'b';
                 uncle->color = 'b';
                 (*x)->parent->parent->color = 'r';
@@ -186,14 +159,11 @@ int insert_fixup(handler *tree, node *x)
             else
             {
                 if ((*x) == (*x)->parent->left)
-
                 {
-                    printf("\t\tCASE 2\n");
                     (*x) = (*x)->parent;
                     rr = rotate_right(tree, x) + rr;
                 }
                 assert((*x)->parent->parent != NULL);
-                printf("\t\tCASE 3\n");
                 (*x)->parent->color = 'b';
                 (*x)->parent->parent->color = 'r';
                 aux = (*x)->parent->parent;
@@ -203,7 +173,6 @@ int insert_fixup(handler *tree, node *x)
         else
             assert(0);
     }
-    printf("\t\tCASE 0\n");
     (*tree)->root->color = 'b';
     return rr + rl;
 }
@@ -246,14 +215,11 @@ int delete_fixup(handler *tree, node *x)
 {
     assert((*x) != NULL);
 
-    printf("\t\tDelete fix-up invoked\n");
-
     node w, p, T;
     int flag;
 
     if ((*x)->right == (*x) && (*x)->left == (*x))
     {
-        printf("\t\tSentinel added in delete_fixup\n");
         flag = 1;
         T = (*x);
         T->right = NULL;
@@ -275,7 +241,6 @@ int delete_fixup(handler *tree, node *x)
             {
                 if (w->color == 'r')
                 {
-                    printf("\t\t\tTYPE 1\n");
                     w->color = 'b';
                     (*x)->parent->color = 'r';
                     p = (*x)->parent;
@@ -288,7 +253,6 @@ int delete_fixup(handler *tree, node *x)
                 {
                     if ((w->left == NULL || w->left->color == 'b') && (w->right == NULL || w->right->color == 'b'))
                     {
-                        printf("\t\t\tTYPE 2\n");
                         w->color = 'r';
                         (*x) = (*x)->parent;
                     }
@@ -297,14 +261,12 @@ int delete_fixup(handler *tree, node *x)
                         if (w->right == NULL || w->right->color == 'b')
                         {
                             assert(w->left->color == 'r');
-                            printf("\t\t\tTYPE 3\n");
                             w->left->color = 'b';
                             w->color = 'r';
                             rotate_right(tree, &w);
                             assert((*x) == (*x)->parent->left);
                             w = (*x)->parent->right;
                         }
-                        printf("\t\t\tTYPE 4\n");
                         w->color = (*x)->parent->color;
                         (*x)->parent->color = 'b';
                         assert(w->right != NULL);
@@ -320,7 +282,6 @@ int delete_fixup(handler *tree, node *x)
             }
             else
             {
-                printf("\t\t\tTYPE 0\n"); // sibling is null
                 if ((*x)->parent != (*tree)->root)
                     assert(0);
             }
@@ -333,7 +294,6 @@ int delete_fixup(handler *tree, node *x)
             {
                 if (w->color == 'r')
                 {
-                    printf("\t\t\tTYPE 1\n");
                     w->color = 'b';
                     (*x)->parent->color = 'r';
                     p = (*x)->parent;
@@ -346,7 +306,6 @@ int delete_fixup(handler *tree, node *x)
                 {
                     if ((w->left == NULL || w->left->color == 'b') && (w->right == NULL || w->right->color == 'b'))
                     {
-                        printf("\t\t\tTYPE 2\n");
                         w->color = 'r';
                         (*x) = (*x)->parent;
                     }
@@ -355,14 +314,12 @@ int delete_fixup(handler *tree, node *x)
                         if (w->left == NULL || w->left->color == 'b')
                         {
                             assert(w->right->color == 'r');
-                            printf("\t\t\tTYPE 3\n");
                             w->right->color = 'b';
                             w->color = 'r';
                             rotate_left(tree, &w);
                             assert((*x) == (*x)->parent->right);
                             w = (*x)->parent->left;
                         }
-                        printf("\t\t\tTYPE 4\n");
                         w->color = (*x)->parent->color;
                         (*x)->parent->color = 'b';
                         assert(w->left != NULL);
@@ -378,13 +335,12 @@ int delete_fixup(handler *tree, node *x)
             }
             else
             {
-                printf("\t\t\tTYPE 0\n"); // sibling is null
                 if ((*x)->parent != (*tree)->root)
                     assert(0);
             }
         }
         else
-            assert(0); // return 1;
+            assert(0);
     }
 
     if ((*x) != NULL)
@@ -402,7 +358,6 @@ int delete_fixup(handler *tree, node *x)
                 T->parent->right = NULL;
 
             free(T);
-            printf("\t\tSentinel killed by delete_fixup\n");
             return 0;
         }
         else
@@ -768,8 +723,6 @@ int rbt_insert(handler(*tree), void *key, int (*compare)(const void *op1, const 
         assert(0);
 
     rot = insert_fixup(tree, &new);
-    if (rot != 0)
-        printf("\t%d rotations performed during fixup\n", rot);
 
     watchdog_file_logger((*tree));
     return 0;
@@ -806,10 +759,8 @@ int rbt_delete(handler *tree, void *key, int (*compare)(const void *op1, const v
 
         if (d->left == NULL && d->right == NULL)
         {
-            printf("\t\tCASE 1");
             if (d->parent == NULL)
             {
-                printf(".1\n");
                 (*tree)->root = NULL;
                 og_color = 'r';
                 flag = 2;
@@ -818,7 +769,6 @@ int rbt_delete(handler *tree, void *key, int (*compare)(const void *op1, const v
             {
                 if (og_color == 'r')
                 {
-                    printf(".2\n");
                     if (d == d->parent->left)
                         d->parent->left = NULL;
                     else if (d == d->parent->right)
@@ -828,15 +778,12 @@ int rbt_delete(handler *tree, void *key, int (*compare)(const void *op1, const v
                 }
                 else if (og_color == 'b')
                 {
-                    printf(".3\n");
-
                     T = (node)malloc(sizeof(struct node_struct));
 
                     if (T == NULL)
                         return 2;
 
                     flag = 1;
-                    printf("\t\tSentinel added in rbt_delete\n");
 
                     T->color = 'b';
                     T->left = T;
@@ -860,7 +807,6 @@ int rbt_delete(handler *tree, void *key, int (*compare)(const void *op1, const v
         }
         else if (d->left == NULL && d->right != NULL)
         {
-            printf("\t\tCASE 2\n");
             temp = d->right;
             delete_transplant(tree, &d, &temp);
             destroykey(key);
@@ -868,7 +814,6 @@ int rbt_delete(handler *tree, void *key, int (*compare)(const void *op1, const v
         }
         else if (d->right == NULL && d->left != NULL)
         {
-            printf("\t\tCASE 3\n");
             temp = d->left;
             delete_transplant(tree, &d, &temp);
             destroykey(key);
@@ -876,7 +821,6 @@ int rbt_delete(handler *tree, void *key, int (*compare)(const void *op1, const v
         }
         else if (d->left != NULL && d->right != NULL)
         {
-            printf("\t\tCASE 4\n");
             temp = d->right;
             while (temp->left != NULL)
                 temp = temp->left;
@@ -894,7 +838,6 @@ int rbt_delete(handler *tree, void *key, int (*compare)(const void *op1, const v
                     return 2;
 
                 flag = 1;
-                printf("\t\tSentinel added in rbt_delete\n");
 
                 T->color = 'b';
                 T->left = T;
@@ -949,7 +892,6 @@ int rbt_delete(handler *tree, void *key, int (*compare)(const void *op1, const v
                         T->parent->right = NULL;
 
                     free(T);
-                    printf("\t\tSentinel is killed by rbt_delete\n");
 
                     watchdog_file_logger((*tree));
                     return 0;
@@ -973,14 +915,4 @@ int rbt_delete(handler *tree, void *key, int (*compare)(const void *op1, const v
 int rbt_print(handler tree, void (*keyprinter)(const void *key))
 {
     return print_recursive(tree->root, 0, keyprinter);
-}
-
-int generic_string_test(void *key, int (*compare)(const void *op1, const void *op2), void (*printer)(const void *key))
-{
-    printf("\n\nEntered string: ");
-    printer(key);
-    if (compare(key, key) == 0)
-        return 1;
-    else
-        return 0;
 }

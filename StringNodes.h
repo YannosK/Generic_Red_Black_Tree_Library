@@ -19,11 +19,6 @@ void *string_createkey(char *input_key, size_t key_size);
 void string_destroykey(void *key);
 
 /*
-    Returns the size of the integer key struct (basically the size of int key)
-*/
-size_t string_size(void);
-
-/*
     A function that compares two string keys.
     The comparison is alphabetical
 

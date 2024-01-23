@@ -13,11 +13,6 @@ void *int_createkey(int input_key);
 void int_destroykey(void *key);
 
 /*
-    Returns the size of the integer key struct (basically the size of int key)
-*/
-size_t int_size(void);
-
-/*
     A function that compares two integer keys
 
     Arguments:

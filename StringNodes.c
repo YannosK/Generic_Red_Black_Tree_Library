@@ -48,12 +48,6 @@ void string_destroykey(void *key)
     free(dead);
 }
 
-size_t string_size(void)
-{
-    size_t stringKeySize = sizeof(struct stringStruct);
-    return stringKeySize;
-}
-
 int string_compare(const void *op1, const void *op2)
 {
     assert(op1 != NULL && op2 != NULL);
