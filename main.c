@@ -44,7 +44,7 @@ int main()
         printf("\n\n****************************************************************************************\n");
         printf("Previous choice %c\n", usr_char);
         printf("Select what would you like to do:\n");
-        printf("q: quit\ni: insert new node\nd: delete a node\np: print a red-black Tree\ns: print all trees\n");
+        printf("q: quit\ni: insert new node\nd: delete a node\np: print a red-black Tree\nf: find key\ns: print all trees\n");
         printf("Your choice: ");
         scanf("%c", &usr_char);
         getchar();
@@ -298,6 +298,7 @@ int main()
                 break;
             }
             break;
+
         case 'p':
             printf("\n\n\tPRINT\n\n");
 
@@ -332,6 +333,7 @@ int main()
                         printf("\tThe tree is empty\n");
                 }
                 break;
+
             case 's':
                 printf("\n\tPlease enter the ID of the tree you would like to print: ");
                 if (1 != scanf("%d", &usr_int))
@@ -357,10 +359,18 @@ int main()
                         printf("\tThe tree is empty\n");
                 }
                 break;
+
             default:
                 break;
             }
             break;
+
+        case 'f':
+
+            printf("\n\n\tPRINT\n\n");
+
+            break;
+
         case 's':
             printf("\n\n---------------------------------------------------------------------------------------\n");
             printf("---------------------------------------------------------------------------------------\n");
