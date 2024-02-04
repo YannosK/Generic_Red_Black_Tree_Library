@@ -371,7 +371,7 @@ int main()
                 {
                     printf("\n---------------------------------------------------------------------------------------\n");
                     printf("Integer Tree ID: %d\n\n\n", i);
-                    rt = rbt_print(int_ID[usr_int], int_print);
+                    rt = rbt_print(int_ID[i], int_print);
                 }
             }
 
@@ -384,7 +384,7 @@ int main()
                 {
                     printf("\n---------------------------------------------------------------------------------------\n");
                     printf("String Tree ID: %d\n\n\n", i);
-                    rt = rbt_print(string_ID[usr_int], string_print);
+                    rt = rbt_print(string_ID[i], string_print);
                 }
             }
             break;
