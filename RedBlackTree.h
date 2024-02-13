@@ -43,18 +43,18 @@ unsigned int rbt_destroy(handler tree);
 void *rbt_nodefind(handler tree, void *key, int (*compare)(const void *op1, const void *op2), int (*equal)(const void *op1, const void *op2), void (*destroykey)(void *key));
 
 /*
-    Prints a specific key from a node of a tree
-    It is used to work in conjunction with rbt_keyfind
+    Prints information of a node of a tree
+    It is used to work in conjunction with rbt_nodefind
 
     Arguments:
-    key         : a pointer to the key struct (returned by rbt_keyfind)
-    keyprinter  : a pointer to a function that can print the key of the node, based on the key type (use the same as rbt_keyfind)
+    node        : a pointer to the node struct (returned by rbt_nodefind)
+    keyprinter  : a pointer to a function that can print the key of the node, based on the key type (use the same as rbt_nodefind)
 
     Returns:
     0 if executed correctly
-    1 if the pointer to the key entered was NULL (which means rbt_keyfind found no equal key)
+    1 if the pointer to the node entered was NULL (which means rbt_keyfind found no equal key)
 */
-int rbt_keyprint(const void *key, void (*keyprinter)(const void *key));
+int rbt_nodeprint(const void *nd, void (*keyprinter)(const void *key));
 
 /*
     Red-Black Tree Node Insertion
@@ -81,7 +81,7 @@ int rbt_insert(handler *tree, void *key, int (*compare)(const void *op1, const v
 
     Arguments:
     tree        : a pointer to the sentinel struct of the tree
-    temp_key    : a (void) pointer to the struct that holds a temporary key, in order to find the actual key of the node we wish to delete
+    delnode     : a (void) pointer to the struct that holds a temporary key, in order to find the actual key of the node we wish to delete
     compare     : a pointer to a function that compares keys to see if key1 > key2, taking pointers to their structs as inputs
     equal       : a pointer to a function that compares keys to see if they are equal, taking pointers to their structs as inputs
     destroykey  : a pointer to a function that destroys the container of the inserted key, to avoid memory leaks
