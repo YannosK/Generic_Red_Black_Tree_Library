@@ -22,6 +22,7 @@ int main()
     char usr_string[64];
     int usr_int, usr_int2, rt, i;
     void *key;
+    void *node;
 
     /*
         ID is an array with the handlers of all created RBTs
@@ -44,7 +45,7 @@ int main()
         printf("\n\n****************************************************************************************\n");
         printf("Previous choice %c\n", usr_char);
         printf("Select what would you like to do:\n");
-        printf("q: quit\ni: insert new node\nd: delete a node\np: print a red-black Tree\ns: print all trees\n");
+        printf("q: quit\ni: insert new node\nd: delete a node\nk: print a key value from a node from the red-black tree\np: print a red-black Tree\ns: print all trees\n");
         printf("Your choice: ");
         scanf("%c", &usr_char);
         getchar();
@@ -186,18 +187,18 @@ int main()
                         break;
                     getchar();
 
-                    key = rbt_keyfind(int_ID[usr_int], int_createkey(usr_int2), int_compare, int_equal, int_destroykey);
-                    if (key == NULL)
+                    node = rbt_nodefind(int_ID[usr_int], int_createkey(usr_int2), int_compare, int_equal, int_destroykey);
+                    if (node == NULL)
                         printf("\n\t\tNo node with the inserted key exists\n");
                     else
                     {
-                        rt = rbt_delete((int_ID + usr_int), key, int_compare, int_equal, int_destroykey);
+                        rt = rbt_delete((int_ID + usr_int), node, int_compare, int_equal, int_destroykey);
                         switch (rt)
                         {
                         case 0:
                             break;
                         case 1:
-                            assert(0); // it is dealt with above so it should not be needed
+                            assert(0);
                             break;
                         case 2:
                             printf("\n\t\tFatal memory error\n");
@@ -227,7 +228,7 @@ int main()
                     }
                 }
             }
-            else if (usr_char2 == 'd')
+            else if (usr_char2 == 's')
             {
                 printf("\tEnter the tree ID: ");
                 if (1 != scanf("%d", &usr_int))
@@ -249,12 +250,12 @@ int main()
                     if (fgets(usr_string, sizeof(usr_string), stdin) == NULL)
                         break;
 
-                    key = rbt_keyfind(string_ID[usr_int], string_createkey(usr_string, sizeof(usr_string)), string_compare, string_equal, string_destroykey);
-                    if (key == NULL)
+                    node = rbt_nodefind(string_ID[usr_int], string_createkey(usr_string, sizeof(usr_string)), string_compare, string_equal, string_destroykey);
+                    if (node == NULL)
                         printf("\n\t\tNo node with the inserted key exists\n");
                     else
                     {
-                        rt = rbt_delete((string_ID + usr_int), key, string_compare, string_equal, string_destroykey);
+                        rt = rbt_delete((string_ID + usr_int), node, string_compare, string_equal, string_destroykey);
                         switch (rt)
                         {
                         case 0:
@@ -290,6 +291,11 @@ int main()
                     }
                 }
             }
+            break;
+        case 'k':
+            printf("\n\n\tPRINT KEY\n\n");
+
+            printf("\tYou can print the key of a node, from an existing tree using, the nodes\n");
             break;
         case 'p':
             printf("\n\n\tPRINT\n\n");

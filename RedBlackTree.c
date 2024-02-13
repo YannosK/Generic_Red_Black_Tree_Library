@@ -647,7 +647,7 @@ unsigned int rbt_destroy(handler tree)
     }
 }
 
-void *rbt_keyfind(handler tree, void *key, int (*compare)(const void *op1, const void *op2), int (*equal)(const void *op1, const void *op2), void (*destroykey)(void *key))
+void *rbt_nodefind(handler tree, void *key, int (*compare)(const void *op1, const void *op2), int (*equal)(const void *op1, const void *op2), void (*destroykey)(void *key))
 {
     if (tree == NULL)
     {
@@ -666,7 +666,7 @@ void *rbt_keyfind(handler tree, void *key, int (*compare)(const void *op1, const
             if (equal(key, aux->key))
             {
                 destroykey(key);
-                return aux->key;
+                return aux;
             }
             else if (compare(key, aux->key))
                 aux = aux->right;
@@ -677,6 +677,19 @@ void *rbt_keyfind(handler tree, void *key, int (*compare)(const void *op1, const
         }
         destroykey(key);
         return NULL;
+    }
+}
+
+int rbt_keyprint(const void *key, void (*keyprinter)(const void *key))
+{
+    assert(key != NULL);
+
+    if (key == NULL)
+        return 1;
+    else
+    {
+        keyprinter(key);
+        return 0;
     }
 }
 
@@ -730,11 +743,15 @@ int rbt_insert(handler(*tree), void *key, int (*compare)(const void *op1, const 
     return 0;
 }
 
-int rbt_delete(handler *tree, void *key, int (*compare)(const void *op1, const void *op2), int (*equal)(const void *op1, const void *op2), void (*destroykey)(void *key))
+int rbt_delete(handler *tree, void *delnode, int (*compare)(const void *op1, const void *op2), int (*equal)(const void *op1, const void *op2), void (*destroykey)(void *key))
 {
     watchdog_file_logger((*tree));
 
-    assert(key != NULL);
+    assert(delnode != NULL);
+    node n;
+    n = (node)delnode;
+    void *key;
+    key = n->key;
 
     if ((*tree)->root == NULL)
         return 4;

@@ -24,23 +24,37 @@ handler rbt_create(void);
 unsigned int rbt_destroy(handler tree);
 
 /*
-    A function where a key is inputed and it finds a node that has such a keyv
-    It uses a temporary key to find the key we want to delete
-    It is responsible to free the memory of the temporary key
+    A function where a key is inputed and it finds a node that has such a key
+    It uses a temporary key to find the key we want
+    It is responsible to free the memory of the temporary key (using destroykey)
 
 
     Arguments:
-    tree    : a pointer to the sentinel struct of the tree
-    key     : a (void) pointer to the struct that holds a key.
-    compare : a pointer to a function that compares keys to see if key1 > key2, taking pointers to their structs as inputs
-    equal   : a pointer to a function that compares keys to see if they are equal, taking pointers to their structs as inputs
+    tree        : a pointer to the sentinel struct of the tree
+    key         : a (void) pointer to the struct that holds a key.
+    compare     : a pointer to a function that compares keys to see if key1 > key2, taking pointers to their structs as inputs
+    equal       : a pointer to a function that compares keys to see if they are equal, taking pointers to their structs as inputs
     destroykey  : a pointer to a function that destroys the container of the inserted key, to avoid memory leaks
 
     Returns:
     NULL if no equal key was found
-    the pointer to the key struct it found
+    the pointer to the node struct it found
 */
-void *rbt_keyfind(handler tree, void *key, int (*compare)(const void *op1, const void *op2), int (*equal)(const void *op1, const void *op2), void (*destroykey)(void *key));
+void *rbt_nodefind(handler tree, void *key, int (*compare)(const void *op1, const void *op2), int (*equal)(const void *op1, const void *op2), void (*destroykey)(void *key));
+
+/*
+    Prints a specific key from a node of a tree
+    It is used to work in conjunction with rbt_keyfind
+
+    Arguments:
+    key         : a pointer to the key struct (returned by rbt_keyfind)
+    keyprinter  : a pointer to a function that can print the key of the node, based on the key type (use the same as rbt_keyfind)
+
+    Returns:
+    0 if executed correctly
+    1 if the pointer to the key entered was NULL (which means rbt_keyfind found no equal key)
+*/
+int rbt_keyprint(const void *key, void (*keyprinter)(const void *key));
 
 /*
     Red-Black Tree Node Insertion
@@ -80,7 +94,7 @@ int rbt_insert(handler *tree, void *key, int (*compare)(const void *op1, const v
     4 when the tree is empty (root == NULL)
     5 if the node that was just deleted was the root - used to call rbt_destroy
 */
-int rbt_delete(handler *tree, void *key, int (*compare)(const void *op1, const void *op2), int (*equal)(const void *op1, const void *op2), void (*destroykey)(void *key));
+int rbt_delete(handler *tree, void *delnode, int (*compare)(const void *op1, const void *op2), int (*equal)(const void *op1, const void *op2), void (*destroykey)(void *key));
 
 /*
     Prints the entire Red-Black Tree
@@ -93,17 +107,5 @@ int rbt_delete(handler *tree, void *key, int (*compare)(const void *op1, const v
     0 if executed correctly
 */
 int rbt_print(handler tree, void (*keyprinter)(const void *key));
-
-/*
-    Prints the iformation of a specific node
-
-    Arguments:
-    tree        : a pointer to the sentinel struct of the tree
-    keyprinter  : a pointer to a function that can print the key of the node, based on the key type
-
-    Returns:
-    0 if executed correctly
-*/
-int rbt_printkey(handler tree, void (*keyprinter)(const void *key));
 
 #endif
