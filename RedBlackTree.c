@@ -435,8 +435,9 @@ int print_recursive(node x, int level, void (*keyprinter)(const void *key))
     returns -3 if a red node does not have NULL or black children
     returns -4 if a path to NULL has more or less black nodes than the other paths
     returns -5 if the tree is empty
+    returns -6 if the node's children have wrong key order (left child must have smaller key and right must have bigger)
 */
-int watchdog_rbt_selfcheck(handler tree, node r, int blacks, int nill_blacks)
+int watchdog_rbt_selfcheck(handler tree, node r, int blacks, int nill_blacks, int (*compare)(const void *op1, const void *op2))
 {
     assert(blacks >= 0 && nill_blacks >= 0);
 
@@ -448,6 +449,10 @@ int watchdog_rbt_selfcheck(handler tree, node r, int blacks, int nill_blacks)
             return -5;
         else
         {
+            if (r->left != NULL && compare(r->key, r->left->key) != 1)
+                return -6;
+            if (r->right != NULL && compare(r->right->key, r->key) != 1)
+                return -6;
             if (tree->root->color != 'r' && tree->root->color != 'b')
                 return -1;
             else if (tree->root->color == 'r' || tree->root->parent != NULL)
@@ -457,6 +462,11 @@ int watchdog_rbt_selfcheck(handler tree, node r, int blacks, int nill_blacks)
     else
     {
         assert(r != NULL);
+
+        if (r->left != NULL && compare(r->key, r->left->key) != 1)
+            return -6;
+        if (r->right != NULL && compare(r->right->key, r->key) != 1)
+            return -6;
 
         if (r->color != 'r' && r->color != 'b')
             return -1;
@@ -485,7 +495,7 @@ int watchdog_rbt_selfcheck(handler tree, node r, int blacks, int nill_blacks)
 
         if (r->left != NULL)
         {
-            rt = watchdog_rbt_selfcheck(tree, r->left, blacks, nill_blacks);
+            rt = watchdog_rbt_selfcheck(tree, r->left, blacks, nill_blacks, compare);
 
             if (rt < 0)
             {
@@ -502,8 +512,12 @@ int watchdog_rbt_selfcheck(handler tree, node r, int blacks, int nill_blacks)
                     break;
                 case -4:
                     return -4;
+                    break;
                 case -5:
                     assert(0);
+                    break;
+                case -6:
+                    return -6;
                     break;
                 default:
                     assert(0);
@@ -516,7 +530,7 @@ int watchdog_rbt_selfcheck(handler tree, node r, int blacks, int nill_blacks)
 
         if (r->right != NULL)
         {
-            rt = watchdog_rbt_selfcheck(tree, r->right, blacks, nill_blacks);
+            rt = watchdog_rbt_selfcheck(tree, r->right, blacks, nill_blacks, compare);
 
             if (rt < 0)
             {
@@ -533,8 +547,12 @@ int watchdog_rbt_selfcheck(handler tree, node r, int blacks, int nill_blacks)
                     break;
                 case -4:
                     return -4;
+                    break;
                 case -5:
                     assert(0);
+                    break;
+                case -6:
+                    return -6;
                     break;
                 default:
                     assert(0);
@@ -554,16 +572,14 @@ int watchdog_rbt_selfcheck(handler tree, node r, int blacks, int nill_blacks)
 
     returns 0 if the structure is a RBT
 */
-int watchdog_file_logger(handler tree)
+int watchdog_file_logger(handler tree, int (*compare)(const void *op1, const void *op2))
 {
     int rt;
     int x = 5;
     int number;
     int log_num = 0;
 
-    // printf("\n\n\tUTILITY: checking if we have a RBT\n\n");
-
-    rt = watchdog_rbt_selfcheck(tree, tree->root, 0, 0);
+    rt = watchdog_rbt_selfcheck(tree, tree->root, 0, 0, compare);
 
     if (rt < 0)
     {
@@ -596,6 +612,11 @@ int watchdog_file_logger(handler tree)
             break;
         case -5:
             fprintf(fp, "\tThe tree is empty\n");
+            break;
+        case -6:
+            fprintf(fp, "\tThe tree violates the binary tree property, that the right child must be larger than its parent, and the left smaller\n");
+            break;
+        default:
             break;
         }
 
@@ -697,7 +718,7 @@ int rbt_nodeprint(const void *nd, void (*keyprinter)(const void *key))
 int rbt_insert(handler(*tree), void *key, int (*compare)(const void *op1, const void *op2), int (*equal)(const void *op1, const void *op2), void (*destroykey)(void *key))
 {
     if ((*tree)->root != NULL)
-        watchdog_file_logger((*tree));
+        watchdog_file_logger((*tree), compare);
 
     node aux1, aux2;
     int rot;
@@ -740,13 +761,13 @@ int rbt_insert(handler(*tree), void *key, int (*compare)(const void *op1, const 
 
     rot = insert_fixup(tree, &new);
 
-    watchdog_file_logger((*tree));
+    watchdog_file_logger((*tree), compare);
     return 0;
 }
 
 int rbt_delete(handler *tree, void *delnode, int (*compare)(const void *op1, const void *op2), int (*equal)(const void *op1, const void *op2), void (*destroykey)(void *key))
 {
-    watchdog_file_logger((*tree));
+    watchdog_file_logger((*tree), compare);
 
     if ((*tree)->root == NULL)
         return 4;
@@ -878,7 +899,7 @@ int rbt_delete(handler *tree, void *delnode, int (*compare)(const void *op1, con
         if (og_color == 'b')
         {
             rt = delete_fixup(tree, &temp);
-            watchdog_file_logger((*tree));
+            watchdog_file_logger((*tree), compare);
             if (rt == 0)
                 return 0;
             else if (rt == 1)
@@ -901,7 +922,7 @@ int rbt_delete(handler *tree, void *delnode, int (*compare)(const void *op1, con
 
                     free(T);
 
-                    watchdog_file_logger((*tree));
+                    watchdog_file_logger((*tree), compare);
                     return 0;
                 }
                 else
@@ -911,7 +932,7 @@ int rbt_delete(handler *tree, void *delnode, int (*compare)(const void *op1, con
                 return 5;
             else
             {
-                watchdog_file_logger((*tree));
+                watchdog_file_logger((*tree), compare);
                 return 0;
             }
         }

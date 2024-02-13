@@ -306,7 +306,7 @@ int main()
 
             if (usr_char2 == 'i')
             {
-                printf("\n\tPlease enter the ID of the tree you would like to print: ");
+                printf("\tPlease enter the ID of the tree you would like to print: ");
                 if (1 != scanf("%d", &usr_int))
                     break;
                 getchar();
