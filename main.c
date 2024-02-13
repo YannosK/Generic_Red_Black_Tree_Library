@@ -70,9 +70,8 @@ int main()
             scanf("%c", &usr_char2);
             getchar();
 
-            switch (usr_char2)
+            if (usr_char2 == 'i')
             {
-            case 'i':
                 printf("\tEnter the tree ID: ");
                 if (1 != scanf("%d", &usr_int))
                     break;
@@ -113,8 +112,9 @@ int main()
                     assert(0);
                     break;
                 }
-                break;
-            case 's':
+            }
+            else if (usr_char2 == 's')
+            {
                 printf("\tEnter the tree ID: ");
                 if (1 != scanf("%d", &usr_int))
                     break;
@@ -155,9 +155,6 @@ int main()
                     break;
                 }
                 usr_char = 'i';
-                break;
-            default:
-                break;
             }
             break;
         case 'd':
