@@ -634,6 +634,8 @@ handler rbt_create(void)
 
 unsigned int rbt_destroy(handler tree)
 {
+    assert(tree != NULL);
+
     handler aux_back, aux_next;
 
     if (tree->root != NULL)

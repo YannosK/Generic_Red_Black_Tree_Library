@@ -85,9 +85,25 @@ int rbt_delete(handler *tree, void *key, int (*compare)(const void *op1, const v
 /*
     Prints the entire Red-Black Tree
 
-    returns 0 if executed correctly
-    returns 1 if the tree is empty
+    Arguments:
+    tree        : a pointer to the sentinel struct of the tree
+    keyprinter  : a pointer to a function that can print the key of the node, based on the key type
+
+    Returns:
+    0 if executed correctly
 */
 int rbt_print(handler tree, void (*keyprinter)(const void *key));
+
+/*
+    Prints the iformation of a specific node
+
+    Arguments:
+    tree        : a pointer to the sentinel struct of the tree
+    keyprinter  : a pointer to a function that can print the key of the node, based on the key type
+
+    Returns:
+    0 if executed correctly
+*/
+int rbt_printkey(handler tree, void (*keyprinter)(const void *key));
 
 #endif

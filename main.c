@@ -154,7 +154,6 @@ int main()
                     assert(0);
                     break;
                 }
-                usr_char = 'i';
             }
             break;
         case 'd':
@@ -164,9 +163,8 @@ int main()
             scanf("%c", &usr_char2);
             getchar();
 
-            switch (usr_char2)
+            if (usr_char2 == 'i')
             {
-            case 'i':
                 printf("\tEnter the tree ID: ");
                 if (1 != scanf("%d", &usr_int))
                     break;
@@ -228,8 +226,9 @@ int main()
                         }
                     }
                 }
-                break;
-            case 's':
+            }
+            else if (usr_char2 == 'd')
+            {
                 printf("\tEnter the tree ID: ");
                 if (1 != scanf("%d", &usr_int))
                     break;
@@ -290,9 +289,6 @@ int main()
                         }
                     }
                 }
-                break;
-            default:
-                break;
             }
             break;
         case 'p':
@@ -302,9 +298,8 @@ int main()
             scanf("%c", &usr_char2);
             getchar();
 
-            switch (usr_char2)
+            if (usr_char2 == 'i')
             {
-            case 'i':
                 printf("\n\tPlease enter the ID of the tree you would like to print: ");
                 if (1 != scanf("%d", &usr_int))
                     break;
@@ -328,8 +323,9 @@ int main()
                     if (rt == 1)
                         printf("\tThe tree is empty\n");
                 }
-                break;
-            case 's':
+            }
+            else if (usr_char2 == 's')
+            {
                 printf("\n\tPlease enter the ID of the tree you would like to print: ");
                 if (1 != scanf("%d", &usr_int))
                     break;
@@ -353,9 +349,6 @@ int main()
                     if (rt == 1)
                         printf("\tThe tree is empty\n");
                 }
-                break;
-            default:
-                break;
             }
             break;
         case 's':
