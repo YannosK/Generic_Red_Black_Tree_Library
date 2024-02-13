@@ -21,7 +21,7 @@ handler rbt_create(void);
     returns 0 if it destroys a tree
     returns 1 if it did not destroy the tree, because it wasn't empty
 */
-unsigned int rbt_destroy(handler tree);
+int rbt_destroy(handler tree);
 
 /*
     A function where a key is inputed and it finds a node that has such a key

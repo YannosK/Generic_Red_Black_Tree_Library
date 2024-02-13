@@ -653,7 +653,7 @@ handler rbt_create(void)
     return instance;
 }
 
-unsigned int rbt_destroy(handler tree)
+int rbt_destroy(handler tree)
 {
     assert(tree != NULL);
 
