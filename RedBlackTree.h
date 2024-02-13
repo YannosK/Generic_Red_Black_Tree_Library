@@ -47,7 +47,7 @@ void *rbt_nodefind(handler tree, void *key, int (*compare)(const void *op1, cons
     It is used to work in conjunction with rbt_nodefind
 
     Arguments:
-    node        : a pointer to the node struct (returned by rbt_nodefind)
+    nd          : a pointer to the node struct (returned by rbt_nodefind)
     keyprinter  : a pointer to a function that can print the key of the node, based on the key type (use the same as rbt_nodefind)
 
     Returns:
@@ -81,7 +81,7 @@ int rbt_insert(handler *tree, void *key, int (*compare)(const void *op1, const v
 
     Arguments:
     tree        : a pointer to the sentinel struct of the tree
-    delnode     : a (void) pointer to the struct that holds a temporary key, in order to find the actual key of the node we wish to delete
+    delnode     : a (void) pointer to the node struct we wish to delete
     compare     : a pointer to a function that compares keys to see if key1 > key2, taking pointers to their structs as inputs
     equal       : a pointer to a function that compares keys to see if they are equal, taking pointers to their structs as inputs
     destroykey  : a pointer to a function that destroys the container of the inserted key, to avoid memory leaks
