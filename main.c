@@ -67,7 +67,7 @@ int main()
         case 'i':
             printf("\n\n\tINSERT\n\n");
 
-            printf("\tInsert an integer or a string?\n\tPress i for interger and s for string, or q to abort: ");
+            printf("\tInsert an integer or a string?\n\tPress i for integer and s for string, or q to abort: ");
             scanf("%c", &usr_char2);
             getchar();
 
@@ -332,7 +332,7 @@ int main()
             }
             else if (usr_char2 == 's')
             {
-                printf("\n\tPlease enter the ID of the tree you would like to print: ");
+                printf("\tPlease enter the ID of the tree you would like to print: ");
                 if (1 != scanf("%d", &usr_int))
                     break;
                 getchar();
