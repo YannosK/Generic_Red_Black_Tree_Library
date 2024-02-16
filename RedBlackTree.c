@@ -739,7 +739,7 @@ int rbt_nodeprint(const void *nd, void (*keyprinter)(const void *key))
     }
 }
 
-int rbt_insert(handler(*tree), void *key, int (*compare)(const void *op1, const void *op2), int (*equal)(const void *op1, const void *op2), void (*destroykey)(void *key))
+int rbt_insert(handler *tree, void *key, int (*compare)(const void *op1, const void *op2), int (*equal)(const void *op1, const void *op2), void (*destroykey)(void *key))
 {
     assert(compare != NULL && equal != NULL && destroykey != NULL);
 
@@ -803,13 +803,12 @@ int rbt_delete(handler *tree, void *delnode, int (*compare)(const void *op1, con
     int flag = 0; // if it ends up 1 it means a sentinel was created, if it ends up 2 it means the root was deleted
     char og_color;
 
-    assert(delnode != NULL);
     d = (node)delnode;
-    void *key;
-    key = d->key;
-
     if (d != NULL)
     {
+        void *key;
+        key = d->key;
+
         og_color = d->color;
 
         if (d->left == NULL && d->right == NULL)

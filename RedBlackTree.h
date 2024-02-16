@@ -61,10 +61,12 @@ int rbt_nodeprint(const void *nd, void (*keyprinter)(const void *key));
 
 /*
     Red-Black Tree Node Insertion
+    Inserts a node with the inputed key (created by the functions provided by the key-type libraries) in an existing key using its handler
+    It assures the integrity of the red-black tree structure, after the node's insertion
     If the insertion fails it is responsible to free the memory allocated to the inserted key
 
     Arguments:
-    tree        : a pointer to the sentinel struct of the tree
+    tree        : a pointer to the sentinel struct of the tree (handler)
     key         : a (void) pointer to the struct that holds the key that we want inserted in the new node
     compare     : a pointer to a function that compares keys to see if key1 > key2, taking pointers to their structs as inputs (provided by key-type libraries)
     equal       : a pointer to a function that compares keys to see if they are equal, taking pointers to their structs as inputs (provided by key-type libraries)
@@ -72,19 +74,20 @@ int rbt_nodeprint(const void *nd, void (*keyprinter)(const void *key));
 
     Returns:
     0 if the node was added succesfully
-    1 when the node already exists
-    2 when there is no memory left on heap
+    1 when the node with the inserted key already exists
+    2 when there is no memory left on the heap
 */
 int rbt_insert(handler *tree, void *key, int (*compare)(const void *op1, const void *op2), int (*equal)(const void *op1, const void *op2), void (*destroykey)(void *key));
 
 /*
     Red-Black Tree Node Deletion
-    In order to find the proper key of the node to delete, insert a temporary key with equal value with the key you wish to delete in the second argument
-    It is responsible to free the memory soon-to-be-deleted node's key struct
+    It dealocates a node's struct memory and also the memory of the node's key data-holder structure
+    It assures the integrity of the red-black tree structure, after the node's deletion
+    In order to specify the node to delete, use the function rbt_nodefind to find the node using a key value, and add its return value in the corresponding argument
 
     Arguments:
-    tree        : a pointer to the sentinel struct of the tree
-    delnode     : a (void) pointer to the node struct we wish to delete
+    tree        : a pointer to the sentinel struct of the tree (handler)
+    delnode     : a (void) pointer to the node struct we wish to delete, returned by rbt_nodefind function
     compare     : a pointer to a function that compares keys to see if key1 > key2, taking pointers to their structs as inputs (provided by key-type libraries)
     equal       : a pointer to a function that compares keys to see if they are equal, taking pointers to their structs as inputs (provided by key-type libraries)
     destroykey  : a pointer to a function that destroys the container of the inserted key, to avoid memory leaks (provided by key-type libraries)
@@ -92,7 +95,7 @@ int rbt_insert(handler *tree, void *key, int (*compare)(const void *op1, const v
     Returns:
     0 if the node was deleted succesfully
     1 when the node does not exist
-    2 when heap memory allocation fails (the sentinel was not created)
+    2 when heap memory allocation fails
     3 when there is a broken pointer
     4 when the tree is empty (root == NULL)
     5 if the node that was just deleted was the root - used to call rbt_destroy
@@ -108,6 +111,7 @@ int rbt_delete(handler *tree, void *delnode, int (*compare)(const void *op1, con
 
     Returns:
     0 if executed correctly
+    1 if the tree is empty
 */
 int rbt_print(handler tree, void (*keyprinter)(const void *key));
 
