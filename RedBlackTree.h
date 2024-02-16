@@ -52,7 +52,7 @@ void *rbt_nodefind(handler tree, void *key, int (*compare)(const void *op1, cons
 
     Returns:
     0 if executed correctly
-    1 if the pointer to the node entered was NULL (which means rbt_keyfind found no equal key)
+    1 if the pointer to the node entered was NULL (which means rbt_nodefind found no equal key)
 */
 int rbt_nodeprint(const void *nd, void (*keyprinter)(const void *key));
 

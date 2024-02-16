@@ -25,10 +25,14 @@ int main()
     void *node;
 
     /*
-        ID is an array with the handlers of all created RBTs
+        int_ID is an array with the handlers of all created RBTs of type int
         It is used by this scaffold main.c for the user to know where to insert and delete
     */
     handler int_ID[10];
+    /*
+        string_ID is an array with the handlers of all created RBTs of type string
+        It is used by this scaffold main.c for the user to know where to insert and delete
+    */
     handler string_ID[10];
     for (i = 0; i < 10; i++)
     {
@@ -45,7 +49,7 @@ int main()
         printf("\n\n****************************************************************************************\n");
         printf("Previous choice %c\n", usr_char);
         printf("Select what would you like to do:\n");
-        printf("q: quit\ni: insert new node\nd: delete a node\nk: print a key value from a node from the red-black tree\np: print a red-black Tree\ns: print all trees\n");
+        printf("q: quit\ni: insert new node\nd: delete a node\nk: print information of a node from a red-black tree\np: print a red-black Tree\ns: print all trees\n");
         printf("Your choice: ");
         scanf("%c", &usr_char);
         getchar();
@@ -156,6 +160,8 @@ int main()
                     break;
                 }
             }
+            node = NULL;
+            key = NULL;
             break;
         case 'd':
             printf("\n\n\tDELETE\n\n");
@@ -291,11 +297,84 @@ int main()
                     }
                 }
             }
+            node = NULL;
+            key = NULL;
             break;
         case 'k':
-            printf("\n\n\tPRINT KEY\n\n");
+            printf("\n\n\tPRINT NODE INFO\n\n");
 
-            printf("\tYou can print the key of a node, from an existing tree using, the nodes\n");
+            printf("\tYou can print information of a node, from an existing tree using, the node's key\n");
+            printf("\tPress i to search on an integer type tree, press s to search in a string type tree, or q to quit: ");
+            scanf("%c", &usr_char2);
+            getchar();
+
+            if (usr_char2 == 'i')
+            {
+                printf("\tEnter the tree ID: ");
+                if (1 != scanf("%d", &usr_int))
+                    break;
+                getchar();
+
+                if (usr_int > 9)
+                {
+                    printf("\n\tThe tree IDs range from 0 to 9!\n");
+                    break;
+                }
+                assert(usr_int <= 9 && usr_int >= 0);
+
+                if (int_ID[usr_int] == NULL)
+                    printf("\n\tInvalid ID");
+                else
+                {
+                    printf("\tEnter the node's key value: ");
+                    if (1 != scanf("%d", &usr_int2))
+                        break;
+                    getchar();
+
+                    key = int_createkey(usr_int2);
+                    if (key == NULL)
+                        return 1;
+                    node = rbt_nodefind(int_ID[usr_int], key, int_compare, int_equal, int_destroykey);
+                    if (node == NULL)
+                        printf("\n\tNo node with such key was found in the current tree.\n");
+                    else
+                        rbt_nodeprint(node, int_print);
+                }
+            }
+            else if (usr_char2 == 's')
+            {
+                printf("\tEnter the tree ID: ");
+                if (1 != scanf("%d", &usr_int))
+                    break;
+                getchar();
+
+                if (usr_int > 9)
+                {
+                    printf("\n\tThe tree IDs range from 0 to 9!\n");
+                    break;
+                }
+                assert(usr_int <= 9 && usr_int >= 0);
+
+                if (string_ID[usr_int] == NULL)
+                    printf("\n\tInvalid ID\n");
+                else
+                {
+                    printf("\tEnter the node's key value: ");
+                    if (fgets(usr_string, sizeof(usr_string), stdin) == NULL)
+                        break;
+
+                    key = string_createkey(usr_string, sizeof(usr_string));
+                    if (key == NULL)
+                        return 1;
+                    node = rbt_nodefind(string_ID[usr_int], key, string_compare, string_equal, string_destroykey);
+                    if (node == NULL)
+                        printf("\n\tNo node with such key was found in the current tree.\n");
+                    else
+                        rbt_nodeprint(node, string_print);
+                }
+            }
+            node = NULL;
+            key = NULL;
             break;
         case 'p':
             printf("\n\n\tPRINT\n\n");

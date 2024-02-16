@@ -703,20 +703,46 @@ void *rbt_nodefind(handler tree, void *key, int (*compare)(const void *op1, cons
 
 int rbt_nodeprint(const void *nd, void (*keyprinter)(const void *key))
 {
-    assert(nd != NULL);
+    assert(keyprinter != NULL);
 
     if (nd == NULL)
         return 1;
     else
     {
         node n = (node)nd;
-        // keyprinter(key);
+        printf("\n\nKey: ");
+        keyprinter(n->key);
+        printf("Color: %c\n", n->color);
+        if (n->parent == NULL)
+            printf("Parent: NULL\n");
+        else
+        {
+            printf("Parent: ");
+            keyprinter(n->parent->key);
+        }
+        if (n->right == NULL)
+            printf("Right: NULL\n");
+        else
+        {
+            printf("Right: ");
+            keyprinter(n->right->key);
+        }
+        if (n->left == NULL)
+            printf("Left: NULL\n");
+        else
+        {
+            printf("Left: ");
+            keyprinter(n->left->key);
+        }
+        printf("\n");
         return 0;
     }
 }
 
 int rbt_insert(handler(*tree), void *key, int (*compare)(const void *op1, const void *op2), int (*equal)(const void *op1, const void *op2), void (*destroykey)(void *key))
 {
+    assert(compare != NULL && equal != NULL && destroykey != NULL);
+
     if ((*tree)->root != NULL)
         watchdog_file_logger((*tree), compare);
 
