@@ -267,7 +267,7 @@ int main()
                         case 0:
                             break;
                         case 1:
-                            assert(0); // it is dealt with above so it should not be needed
+                            assert(0);
                             break;
                         case 2:
                             printf("\n\t\tFatal memory error\n");

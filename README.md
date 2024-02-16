@@ -17,6 +17,8 @@ What follows is the documentation of the current project
 
 This is the core library of the project providing the user with functions to manipulate red-black trees. It supports the manipulation of red-black trees that are structured from nodes that have keys of (theoretically) any data type, as long as it is used in conjunction with the corresponding key-type libraries (```IntegerKeys.h``` and ```StringKeys.h```). The structure of the red-black trees is based on the key values of the nodes, and their relationships (for example with integer keys they are sorted based on whuch is smaller and which is larger, while strings are sorted based on alphabetical order).
 <br>
+Along with the library goes a text file, **ErrorLogs.txt**, where the library rights to whenever it detects that some structure, that should be a red-black tree, is not a red black tree. That happens inside the source file ```RedBlackTree.c```, using the functions ```watchdog_rbt_selfcheck``` and ```watchdog_file_logger```. The type of mistake (the rule of the red-black tree structure that is broken) will be written in the ErrorLogs.txt file. Every time a function that modifies a tree is called the ```watchdog_rbt_selfcheck``` and ```watchdog_file_logger``` function ensure that what the function received is a red-black tree, and that it remains a red-black tree, after the modifications.
+<br>
 All the functions inside the library have proper contracts and comments written, that explain in detail what the iput arguments are (type, description etc) as well as the return values. Here I will briefly explain their use
 
 ### ```handler```
@@ -44,7 +46,7 @@ The function has different return values to inform the user of proper execution,
 ### ```rbt_delete```
 This function is used to delete a node inside an existing red-black tree. The tree must have already been created using ```rbt_create``` and its ```handler``` should be known by the user, in order to be inputed as an argument. The user must also insert as an argument a pointer to the node they wish to delete. This is achived by running the ```rbt_nodefind``` function and using its return value as a second argument of ```rbt_delete```. Alternatively they can call ```rbt_nodefind``` by adding it as an argument directly. Pointers to functions that operated on node's keys must also be isnerted as arguments of ```rbt_delete```. These functions operate on key structures to compare them and destroy them, and they are provided by the key-type libraries (```IntegerKeys.h``` and ```StringKeys.h```).
 <br>
-The function has different return values to inform the user of the execution outcome. It informs wether the operation concluded with a succesful deletion. There is a specific case (return value 5) where it informs that the root of the tree was deleted, because some users might like to run ```rbt_destroy``` directly after that. If the deletion did not conclude it informs the user of the possible errors, that are: the node they wish to delete does not exist, the tree is empty, some memory allocation failed _(esoterically in ```RedBlackTree.c``` some auxiliary memory allocations are performed, but before the function returns their memory is dealocated)_, or there are broken data types inside the structure. The latter is highly unlikely but the user must terminate the program in that case. If it terminates with a successful deletion that means that both the strucure of the node and the structure of the key of the node are deleted, and their memory in the heap is dealocated.
+The function has different return values to inform the user of the execution outcome. It informs wether the operation concluded with a succesful deletion. There is a specific case (return value 5) where it informs that the only node of the tree was deleted, because some users might like to run ```rbt_destroy``` directly after that. If the deletion did not conclude it informs the user of the possible errors, that are: the node they wish to delete does not exist, the tree is empty, some memory allocation failed _(esoterically in ```RedBlackTree.c``` some auxiliary memory allocations are performed, but before the function returns their memory is dealocated)_, or there are broken data types inside the structure. The latter is highly unlikely but the user must terminate the program in that case. If it terminates with a successful deletion that means that both the strucure of the node and the structure of the key of the node are deleted, and their memory in the heap is dealocated.
 
 ### ```rbt_print```
 This function is used to print a specific tree. The tree must have been created using the ```rbt_create``` function and its ```handler``` should be known by the user, in order to be inserted as an argument. A ```keyprinter``` pointer to a function must also be provided as an argument. This function is provided by the key-type libraries (```IntegerKeys.h``` and ```StringKeys.h```). The function prints the tree in the terminal, or it returns 1 to inform the user that the inserted tree was empty.
@@ -93,9 +95,64 @@ Possible errors:
 - inserting a tree ID outside the range 0 to 9
 - inserting a node key that is equal with another node's key inside a tree
 
-Functions from RedBlackTree.h used
-- typedef handler is used to declare pointers to sentinel structs of trees. These pointers are what is stored inside the tree ID arrays (the ID of the trees is basically the indexing of these arrays)
-- rbt_insert is used to insert a node in a tree with a known handler (found from the ID array), with the key the user inserted
 
-Functions from ```IntegerNodes.h``` and ```StringNodes.h``` used:
-- 
+Functions from ```RedBlackTree.h```, ```IntegerNodes.h``` and ```StringNodes.h``` used:
+- type definition ```handler``` is used to declare pointers to sentinel structs of trees. These pointers are what is stored inside the tree ID arrays (the ID of the trees is basically the indexing of these arrays)
+- if the tree ID inserted correspond to an empty position in the tree array then ```rbt_create``` is called and its value is passed to the proper ID in the array
+- ```int_createkey``` or ```string_createkey``` based on what type of key the user wishes to input
+- ```rbt_insert``` passing as arguments the proper ```handler``` from the trees ID arrays, the pointer to the created keys, and pointers to comparison,equality and destroykey functions from the key-type libraries
+
+
+### delete
+The user can delete a node from a specific tree. Like insert they must specify tree type, tree ID and the key of the node they wish to delete. To find the node they wish ```rbt_nodefind``` is called, with ```int_createkey```/ ```string_createkey``` as an input argument, being a temporary key. The output of ```rbt_nodefind``` is inputed as an argument in ```rbt_delete```.
+
+If all goes well the program returns automatically to the main menu. If something goes wrong the user is propmpted by a specific error message before the program returns to the main menu.
+
+Possible errors:
+- inserting a tree ID outside the range 0 to 9
+- invalid tree ID (empty spot in the ID array)
+- inserting a node key that does not exist within the tree
+- The tree is empty
+- A serious mistake insidse the ```RedBlackTree.c``` source, in which case the program terminates
+- Memoery allocation in the heap failed, in which case the program terminates
+
+There is also a special case, when the node deleted was the tree's only node in which case **the program will call ```rbt_destroy``` to destroy the sentinel of the specific tree, completely erradicating from the propgram, and avoiding memory leaks**.
+
+Functions from ```RedBlackTree.h```, ```IntegerNodes.h``` and ```StringNodes.h``` used:
+- ```rbt_nodefind``` along with ```int_createkey```/ ```string_createkey``` to find the node to be deleted
+- ```rbt_delete``` with arguments the ```handler``` to the treee containing the node to be deleted, a pointer to that node, and pointers to comparison,equality and destroykey functions from the key-type librariesS
+- in the case the node deleted was the only node of the tree, then ```rbt_destroy``` is called on that tree, using its ```handler```
+
+### print node information
+This operation prints the information (that is its key value, its parent's and childrens' key value, and its color). The user must specify the tree type, ID, and add the node's key.
+
+If errors occur, possible error messages are shown:
+- inserting a tree ID outside the range 0 to 9
+- invalid tree ID (empty spot in the ID array)
+- inserting a node key that does not exist within the tree
+
+Functions from ```RedBlackTree.h```, ```IntegerNodes.h``` and ```StringNodes.h``` used:
+- ```rbt_nodefind``` along with ```int_createkey```/ ```string_createkey``` to find the node to be printed
+- ```rbt_nodeprint``` to print the node
+
+### print a tree
+An entire tree can be printed, by inputing its type and ID. The nodes are shown in accending order and all their information (their key value, their parent's and childrens' key value, and their color) will be displayed. A special formating is also used to show the levels of the tree. The rightmost nodes are in higher levels closer to the root, while the leftmost are lower, closer to the leaves.
+
+Possible error messages:
+- inserting a tree ID outside the range 0 to 9
+- invalid tree ID (empty spot in the ID array)
+- the tree is empty (basically impossible because empty keys are destroyed)
+
+Functions from ```RedBlackTree.h```, ```IntegerNodes.h``` and ```StringNodes.h``` used:
+- ```rbt_print``` with pointers to ```int_printprint``` or ```string_print``` function, along with the ```handler``` to the tree's sentinel struct.
+
+### show all red-black trees
+A very handy operation that shows **all the existing red-black trees**, from the existing IDs in the tree ID arrays. It shows all their nodes, with their information. Also it shows each tree's ID.
+
+
+Functions from ```RedBlackTree.h```, ```IntegerNodes.h``` and ```StringNodes.h``` used:
+- ```rbt_print``` with pointers to ```int_printprint``` or ```string_print``` function, along with the ```handler``` to the tree's sentinel struct.
+
+### quit
+
+It temrinates the program
