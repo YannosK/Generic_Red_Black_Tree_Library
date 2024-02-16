@@ -48,3 +48,54 @@ The function has different return values to inform the user of the execution out
 
 ### ```rbt_print```
 This function is used to print a specific tree. The tree must have been created using the ```rbt_create``` function and its ```handler``` should be known by the user, in order to be inserted as an argument. A ```keyprinter``` pointer to a function must also be provided as an argument. This function is provided by the key-type libraries (```IntegerKeys.h``` and ```StringKeys.h```). The function prints the tree in the terminal, or it returns 1 to inform the user that the inserted tree was empty.
+
+
+## Key-type ```IntegerKey.h``` and ```StringKey.h``` libraries
+This libraries provide the user with functions to manipulate **key data-holder structures** that hold the key values of the nodes to be inserted in the red-black trees. These are vital because tree structure is based upon them and their relations.
+<br>
+Both libraries contain similar functions, that just support different data types (integers and strings) and in the future one can always create more libraries of similar structure with other data types, such as doubles.
+<br>
+
+_It must be noted that in order to use the ```StringKey.h``` the user must add proper strings, created and manipulated according to the functions provided by the standard ```<string.h>``` C header file._
+<br>
+_Also for the printing functions to be used, the user must also include the ```<stdio.h>``` header file._
+
+### ```int_createkey``` and ```string_createkey```
+These functions create a new key data-holder strucutre and they return a void pointer to it, that the user can use to insert in the proper functions provided by ```RedBlackTree.h```. The user inputs as an argumnent the value they wish to be contained in the key structure (a single integer or a string). If they return NULL it means that memory allocation in the heap failed and the user must terminate the program
+
+### ```int_destroykey``` and ```string_destroykey```
+These functions destroy the key data-holder struct by dealocating their memory in the heap. The user must input as arguments a void pointer to the key structure they wish to destroy.
+<br>
+There is a small intricacy with the ```string_destroykey```. Because string values inside the key data-holder structure are created by allocating memory in the heap, when ```string_createkey``` is called, these strings' memory is also dealocated when ```string_destroykey``` is called on them.
+
+### ```int_compare``` and ```string_compare```
+These functions take as arguments two pointers to two key data-holder structures and compare them to see if the first argument contains a greater value than the second. If it does it returns 1, else it returns 0. For integers this means arg1 > arg2 , while for strings it means that the first argument is of higher alphabetical order than the second.
+
+### ```int_equal``` and ```string_equal```
+These functions take as arguments two pointers to two key data-holder structures and compare them to see if their contained values are equal. If they are it returns 1, else it returns 0. For integers this means arg1 == arg2 , while for strings it means that the strings are identical, up to the null terminating character '\0'.
+
+### ```int_print``` and ```string_print```
+These functions provide the user the functionality to print the value conatined inside the key data-holder struct, that they input as an argument to the functions.
+
+
+## Scaffold ```main.c```
+
+The main function ```main.c``` is a scaffold to test the libraries' functions. It provides a user interface via terminal where the user has the ability to work on and modify up to 10 different intger type red-black trees and up to 10 different string type red-black trees. The different trees have IDs ranging from 0 to 9 (for integer and string types respectfully). These IDs are asked from the user everytime they wish to modify a certain tree.
+
+The terminal menu provides the user options that are specifically designed to put in use the function of the libraries of the project. These options are:
+
+### insert
+the user can insert a node in a specific tree. First the user must specify wether they want to insert a node in an integer type tree or a string type tree. Then they must provide the tree ID. If no tree with such ID exists then it is automatically created, and the node to be inserted will be the first node in the tree. Then they must input the value of the key they want the node to hold. Finally insertion in the tree is attempted.
+
+If all goes well the program automatically resumes to the main menu. If something goes wrong then specific error messages are shown and then again the program returns to the main menu, except there is a fatal error.
+
+Possible errors:
+- inserting a tree ID outside the range 0 to 9
+- inserting a node key that is equal with another node's key inside a tree
+
+Functions from RedBlackTree.h used
+- typedef handler is used to declare pointers to sentinel structs of trees. These pointers are what is stored inside the tree ID arrays (the ID of the trees is basically the indexing of these arrays)
+- rbt_insert is used to insert a node in a tree with a known handler (found from the ID array), with the key the user inserted
+
+Functions from ```IntegerNodes.h``` and ```StringNodes.h``` used:
+- 
