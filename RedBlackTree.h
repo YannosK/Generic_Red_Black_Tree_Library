@@ -29,14 +29,15 @@ int rbt_destroy(handler tree);
     A function where a key is inputed and it finds a node that has such a key
     It uses a temporary key to find the key we want
     It is responsible to free the memory of the temporary key (using destroykey)
+    The key must be created by the functions provided by the key-type libraries
 
 
     Arguments:
     tree        : a pointer to the sentinel struct of the tree
-    key         : a (void) pointer to the struct that holds a key.
-    compare     : a pointer to a function that compares keys to see if key1 > key2, taking pointers to their structs as inputs
-    equal       : a pointer to a function that compares keys to see if they are equal, taking pointers to their structs as inputs
-    destroykey  : a pointer to a function that destroys the container of the inserted key, to avoid memory leaks
+    key         : a (void) pointer to the struct that holds the temporary key.
+    compare     : a pointer to a function that compares keys to see if key1 > key2, taking pointers to their structs as inputs (provided by key-type libraries)
+    equal       : a pointer to a function that compares keys to see if they are equal, taking pointers to their structs as inputs (provided by key-type libraries)
+    destroykey  : a pointer to a function that destroys the container of the inserted key, to avoid memory leaks (provided by key-type libraries)
 
     Returns:
     NULL if no equal key was found
@@ -50,11 +51,11 @@ void *rbt_nodefind(handler tree, void *key, int (*compare)(const void *op1, cons
 
     Arguments:
     nd          : a pointer to the node struct (returned by rbt_nodefind)
-    keyprinter  : a pointer to a function that can print the key of the node, based on the key type (use the same as rbt_nodefind)
+    keyprinter  : a pointer to a function that can print the key of the node, based on the key type (use the same as rbt_nodefind) (provided by key-type libraries)
 
     Returns:
     0 if executed correctly
-    1 if the pointer to the node entered was NULL (which means rbt_nodefind found no equal key)
+    1 if the pointer to the node entered was NULL (which means rbt_nodefind found no node with the insereted key)
 */
 int rbt_nodeprint(const void *nd, void (*keyprinter)(const void *key));
 
@@ -65,9 +66,9 @@ int rbt_nodeprint(const void *nd, void (*keyprinter)(const void *key));
     Arguments:
     tree        : a pointer to the sentinel struct of the tree
     key         : a (void) pointer to the struct that holds the key that we want inserted in the new node
-    compare     : a pointer to a function that compares keys to see if key1 > key2, taking pointers to their structs as inputs
-    equal       : a pointer to a function that compares keys to see if they are equal, taking pointers to their structs as inputs
-    destroykey  : a pointer to a function that destroys the container of the inserted key, to avoid memory leaks
+    compare     : a pointer to a function that compares keys to see if key1 > key2, taking pointers to their structs as inputs (provided by key-type libraries)
+    equal       : a pointer to a function that compares keys to see if they are equal, taking pointers to their structs as inputs (provided by key-type libraries)
+    destroykey  : a pointer to a function that destroys the container of the inserted key, to avoid memory leaks (provided by key-type libraries)
 
     Returns:
     0 if the node was added succesfully
@@ -84,9 +85,9 @@ int rbt_insert(handler *tree, void *key, int (*compare)(const void *op1, const v
     Arguments:
     tree        : a pointer to the sentinel struct of the tree
     delnode     : a (void) pointer to the node struct we wish to delete
-    compare     : a pointer to a function that compares keys to see if key1 > key2, taking pointers to their structs as inputs
-    equal       : a pointer to a function that compares keys to see if they are equal, taking pointers to their structs as inputs
-    destroykey  : a pointer to a function that destroys the container of the inserted key, to avoid memory leaks
+    compare     : a pointer to a function that compares keys to see if key1 > key2, taking pointers to their structs as inputs (provided by key-type libraries)
+    equal       : a pointer to a function that compares keys to see if they are equal, taking pointers to their structs as inputs (provided by key-type libraries)
+    destroykey  : a pointer to a function that destroys the container of the inserted key, to avoid memory leaks (provided by key-type libraries)
 
     Returns:
     0 if the node was deleted succesfully
@@ -103,7 +104,7 @@ int rbt_delete(handler *tree, void *delnode, int (*compare)(const void *op1, con
 
     Arguments:
     tree        : a pointer to the sentinel struct of the tree
-    keyprinter  : a pointer to a function that can print the key of the node, based on the key type
+    keyprinter  : a pointer to a function that can print the key of the node, based on the key type (provided by key-type libraries)
 
     Returns:
     0 if executed correctly
