@@ -1,7 +1,7 @@
 .PHONY: all clean
 
 # Set the executable name
-EXECUTABLE := executable
+EXECUTABLE := generic_red-black-tree
 
 # Compiler flags
 CFLAGS := -g 
