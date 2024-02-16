@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "RedBlackTree.h"
-#include "IntegerNodes.h"
-#include "StringNodes.h"
+#include "IntegerKeys.h"
+#include "StringKeys.h"
 
 // #define NDEBUG
 #include <assert.h>

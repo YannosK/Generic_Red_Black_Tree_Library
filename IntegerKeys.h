@@ -1,5 +1,5 @@
-#ifndef IntegerNodes
-#define IntegerNodes
+#ifndef IntegerKeys
+#define IntegerKeys
 
 /*
     Creates a key of type int and returns a pointer to its struct, as a void pointer

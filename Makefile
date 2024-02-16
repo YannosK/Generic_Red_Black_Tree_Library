@@ -15,9 +15,9 @@ CC := gcc
 BUILD_DIR := build
 $(shell mkdir -p $(BUILD_DIR))
 
-SRC := main.c RedBlackTree.c IntegerNodes.c StringNodes.c
-OBJ := $(BUILD_DIR)/main.o $(BUILD_DIR)/RedBlackTree.o $(BUILD_DIR)/IntegerNodes.o $(BUILD_DIR)/StringNodes.o
-HEADER := RedBlackTree.h IntegerNodes.h StringNodes.h
+SRC := main.c RedBlackTree.c IntegerKeys.c StringKeys.c
+OBJ := $(BUILD_DIR)/main.o $(BUILD_DIR)/RedBlackTree.o $(BUILD_DIR)/IntegerKeys.o $(BUILD_DIR)/StringKeys.o
+HEADER := RedBlackTree.h IntegerKeys.h StringKeys.h
 
 all: $(EXECUTABLE)
 	@echo "Finished!"

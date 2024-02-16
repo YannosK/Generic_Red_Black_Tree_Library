@@ -1,5 +1,5 @@
-#ifndef StringNodes
-#define StringNodes
+#ifndef StringKeys
+#define StringKeys
 
 /*
     Creates a key of type string and returns a pointer to its struct, as a void pointer
