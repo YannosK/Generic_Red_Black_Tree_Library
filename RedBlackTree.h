@@ -9,6 +9,7 @@ typedef struct sentinel *handler;
 
 /*
     Creates a new red-black tree
+    Allocates memory for the tree's sentinel struct and returns a pointer to it
 
     returns a pointer to the sentinel struct of the red-black tree it created
     returns NULL if memory allocation failed
@@ -17,6 +18,7 @@ handler rbt_create(void);
 
 /*
     Destroys a red-black tree
+    Dealocates the memory of the tree's sentinel struct
 
     returns 0 if it destroys a tree
     returns 1 if it did not destroy the tree, because it wasn't empty
