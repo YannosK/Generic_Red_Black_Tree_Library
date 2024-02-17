@@ -1,7 +1,7 @@
 # Showcasing genericity in C language, by writing a generic red-black tree
 
-Red black trees are famous data structures, deriving from the simpler binary search trees. The latter can run most functions in O(N) at worst.
-Red black trees are mostly balanced trees, so they improve on complexity, in the order of O(lgN).
+Red black trees are famous data structures, deriving from the simpler binary search trees. The latter can run most functions in $O(N)$ time at worst.
+Red black trees are mostly balanced trees, so they improve on complexity, in the order of $O(lgN)$.
 <br>
 
 In this project I created generic rbt libraries that can create trees with nodes with integer keys, or string keys, using the same functions to operate on them.
