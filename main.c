@@ -49,7 +49,7 @@ int main()
         printf("\n\n****************************************************************************************\n");
         printf("Previous choice %c\n", usr_char);
         printf("Select what would you like to do:\n");
-        printf("q: quit\ni: insert new node\nd: delete a node\nk: print information of a node from a red-black tree\np: print a red-black Tree\ns: print all trees\n");
+        printf("q: quit\ni: insert new node\nd: delete a node\nk: print information of a node from a red-black tree\np: print a red-black tree\ns: print all trees\n");
         printf("Your choice: ");
         scanf("%c", &usr_char);
         getchar();
