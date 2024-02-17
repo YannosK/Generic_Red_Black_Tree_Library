@@ -39,6 +39,7 @@ struct sentinel
 */
 int rotate_left(handler *tree, node *x)
 {
+    assert((*tree) != NULL);
     assert((*x) != NULL && (*x)->right != NULL);
 
     node y;
@@ -72,6 +73,7 @@ int rotate_left(handler *tree, node *x)
 */
 int rotate_right(handler *tree, node *x)
 {
+    assert((*tree) != NULL);
     assert((*x) != NULL && (*x)->left != NULL);
 
     node y;
@@ -105,7 +107,7 @@ int rotate_right(handler *tree, node *x)
 */
 int insert_fixup(handler *tree, node *x)
 {
-    assert((*x) != NULL);
+    assert((*tree) != NULL && (*x) != NULL);
 
     node uncle;
     node aux;
@@ -186,6 +188,7 @@ int insert_fixup(handler *tree, node *x)
 */
 int delete_transplant(handler *tree, node *d, node *t)
 {
+    assert((*tree) != NULL);
     assert((*d) != NULL && (*t) != NULL & (*t)->parent != NULL);
 
     if ((*d)->parent == NULL)
@@ -213,7 +216,7 @@ int delete_transplant(handler *tree, node *d, node *t)
 */
 int delete_fixup(handler *tree, node *x)
 {
-    assert((*x) != NULL);
+    assert((*x) != NULL && (*tree) != NULL);
 
     node w, p, T;
     int flag;
@@ -376,6 +379,8 @@ int delete_fixup(handler *tree, node *x)
 */
 int print_recursive(node x, int level, void (*keyprinter)(const void *key))
 {
+    assert(keyprinter != NULL);
+
     if (x == NULL)
         return 1;
     else
@@ -439,6 +444,7 @@ int print_recursive(node x, int level, void (*keyprinter)(const void *key))
 */
 int watchdog_rbt_selfcheck(handler tree, node r, int blacks, int nill_blacks, int (*compare)(const void *op1, const void *op2))
 {
+    assert(tree != NULL && compare != NULL);
     assert(blacks >= 0 && nill_blacks >= 0);
 
     int rt;
@@ -574,6 +580,8 @@ int watchdog_rbt_selfcheck(handler tree, node r, int blacks, int nill_blacks, in
 */
 int watchdog_file_logger(handler tree, int (*compare)(const void *op1, const void *op2))
 {
+    assert(tree != NULL && compare != NULL);
+
     int rt;
     int x = 5;
     int number;
@@ -670,6 +678,8 @@ int rbt_destroy(handler tree)
 
 void *rbt_nodefind(handler tree, void *key, int (*compare)(const void *op1, const void *op2), int (*equal)(const void *op1, const void *op2), void (*destroykey)(void *key))
 {
+    assert(compare != NULL && equal != NULL && destroykey != NULL);
+
     if (tree == NULL)
     {
         destroykey(key);
@@ -793,6 +803,8 @@ int rbt_insert(handler *tree, void *key, int (*compare)(const void *op1, const v
 
 int rbt_delete(handler *tree, void *delnode, int (*compare)(const void *op1, const void *op2), int (*equal)(const void *op1, const void *op2), void (*destroykey)(void *key))
 {
+    assert(compare != NULL && equal != NULL && destroykey != NULL);
+
     watchdog_file_logger((*tree), compare);
 
     if ((*tree)->root == NULL)
@@ -968,5 +980,6 @@ int rbt_delete(handler *tree, void *delnode, int (*compare)(const void *op1, con
 
 int rbt_print(handler tree, void (*keyprinter)(const void *key))
 {
+    assert(tree != NULL && keyprinter != NULL);
     return print_recursive(tree->root, 0, keyprinter);
 }
